@@ -1,14 +1,16 @@
 package com.ms.luvook.book.adaptor;
 
-import com.google.gson.Gson;
-import com.ms.luvook.book.domain.Book;
-import com.ms.luvook.book.type.ItemIdType;
-import com.ms.luvook.book.type.QueryType;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import com.google.gson.Gson;
+import com.ms.luvook.book.domain.Book;
+import com.ms.luvook.book.type.ItemIdType;
+import com.ms.luvook.book.type.QueryType;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -34,7 +36,7 @@ public class BookAdaptorImpl implements BookAdaptor {
 
         return webClient
                 .get()
-                .uri("uri")
+                .uri(uri)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .log()
