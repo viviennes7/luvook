@@ -29,7 +29,7 @@ public class BookAdaptorImpl implements BookAdaptor {
     final Gson gson = new Gson();
 
     @Override
-    public Mono<String> findOne(String itemId, ItemIdType itemIdType) throws Exception {
+    public Mono<Book> findOne(String itemId, ItemIdType itemIdType) throws Exception {
         log.info("itemIdType ::: {}", itemIdType.name());
         String uri = "/ItemLookUp.aspx?itemIdType="+itemIdType.name()+"&ItemId="+itemId+"&output=js&Version=20131101&ttbkey=" + ttbKey;
         log.info("URL ::: {}", BASE_URL + uri);
@@ -40,7 +40,7 @@ public class BookAdaptorImpl implements BookAdaptor {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .log()
-                .flatMap(response -> response.bodyToMono(String.class));
+                .flatMap(response -> response.bodyToMono(Book.class));
     }
 
 
