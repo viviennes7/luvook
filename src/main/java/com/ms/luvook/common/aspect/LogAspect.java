@@ -14,15 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Component
 public class LogAspect {
-	
 	final static String ELAPSED_UNIT = "(ms)";
 	
 	@Pointcut("execution(* com.ms.luvook..controller.*Controller.*(..))")
 	public void controllers() {}
 	
-	@Around("controllers()")
+	@Pointcut("@annotation(com.ms.luvook.common.annotation.BasicLog)")
+	public void basicLog(){}
+	
+	@Around("controllers() || basicLog()")
 	public Object basic(ProceedingJoinPoint joinPoint) throws Throwable{
-		
 		
 		long start = System.currentTimeMillis();
 		log.info("########## Start ::::: {} ##########", joinPoint.getSignature().toShortString() );
@@ -42,7 +43,7 @@ public class LogAspect {
 	public void logParameters(JoinPoint joinPoint){
 		String result = "param ::::: "; 
 		
-		MethodSignature signature = (MethodSignature)joinPoint.getSignature();
+		final MethodSignature signature = (MethodSignature)joinPoint.getSignature();
 		String[] parameterNames = signature.getParameterNames();
 		Object[] parameterValues = joinPoint.getArgs();
 
