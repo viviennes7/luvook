@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-public class Book {
+public class BookTest {
     private WebClient webClient = WebClient.create("http://localhost:8080");
 
 
