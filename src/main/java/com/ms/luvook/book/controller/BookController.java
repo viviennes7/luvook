@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.luvook.book.domain.Book;
+import com.ms.luvook.book.domain.BookSearch;
 import com.ms.luvook.book.service.BookService;
 import com.ms.luvook.book.type.ItemIdType;
 import com.ms.luvook.book.type.QueryType;
 import com.ms.luvook.member.domain.Member;
 
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -21,6 +23,7 @@ import reactor.core.publisher.Mono;
  * Created by vivie on 2017-05-11.
  */
 
+@Slf4j
 @RestController
 public class BookController{
 
@@ -46,8 +49,11 @@ public class BookController{
 
     }
 
-    @GetMapping("/books/{queryType}/{query}")
-    public Flux<Book> find(@PathVariable String query, @PathVariable String queryType) throws Exception {
-        return bookService.find(query, QueryType.valueOf(queryType));
+    @GetMapping(value = "/books/{queryType}/{query}")
+    public Mono<BookSearch> find(@PathVariable String queryType,
+    							 @PathVariable String query, 
+    							 int start, int maxResults) throws Exception {
+    	
+        return bookService.find(query, QueryType.valueOf(queryType), start, maxResults);
     }
 }

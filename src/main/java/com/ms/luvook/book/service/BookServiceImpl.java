@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 import com.ms.luvook.book.adaptor.BookAdaptor;
 import com.ms.luvook.book.domain.Book;
+import com.ms.luvook.book.domain.BookSearch;
 import com.ms.luvook.book.type.ItemIdType;
 import com.ms.luvook.book.type.QueryType;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -26,7 +26,7 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Flux<Book> find(String query, QueryType queryType) throws Exception {
-        return bookAdaptor.find(query,queryType);
+    public Mono<BookSearch> find(String query, QueryType queryType, int start, int maxResults) throws Exception {
+        return bookAdaptor.find(query,queryType, start, maxResults);
     }
 }
