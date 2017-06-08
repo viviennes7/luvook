@@ -1,16 +1,17 @@
 package com.ms.luvook.book.adaptor;
 
-import com.google.gson.Gson;
-import com.ms.luvook.book.domain.Book;
-import com.ms.luvook.book.type.ItemIdType;
-import com.ms.luvook.book.type.QueryType;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
+
+import com.google.gson.Gson;
+import com.ms.luvook.book.domain.Book;
+import com.ms.luvook.book.domain.BookSearch;
+import com.ms.luvook.book.type.ItemIdType;
+import com.ms.luvook.book.type.QueryType;
+
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 /**
@@ -28,32 +29,32 @@ public class BookAdaptorImpl implements BookAdaptor {
     final Gson gson = new Gson();
 
     @Override
-    public Mono<String> findOne(String itemId, ItemIdType itemIdType) throws Exception {
+    public Mono<Book> findOne(String itemId, ItemIdType itemIdType) throws Exception {
         log.info("itemIdType ::: {}", itemIdType.name());
-        String uri = "/ItemLookUp.aspx?itemIdType="+itemIdType.name()+"&ItemId="+itemId+"&output=js&Version=20131101&ttbkey=" + ttbKey;
-        log.info("URL ::: {}", BASE_URL + uri);
+        final String uri = "/ItemLookUp.aspx?itemIdType="+itemIdType.name()+"&ItemId="+itemId+"&output=js&Version=20131101&ttbkey=" + ttbKey;
+        log.info("URI ::: {}", BASE_URL + uri);
 
         return webClient
-                .get()
-                .uri("uri")
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .log()
-                .flatMap(response -> {
-                    return response.bodyToMono(String.class);
-                });
+				.get()
+				.uri(uri)
+				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.flatMap(response -> response.bodyToMono(BookSearch.class))
+				.flatMap(bookSearch -> Mono.just( bookSearch.getItem().get(0) ));
     }
 
 
     @Override
-    public Flux<Book> find(String query, QueryType queryType) throws Exception {
-        String uri = "ItemSearch.aspx?&Version=20131101&output=js&ttbkey=" + ttbKey;
-//        Query=aladdin&QueryType=Title&MaxResults=10&start=1
-        log.info("Start");
-        final String call = BASE_URL + "?query="+query;
+    public Mono<BookSearch> find(String query, QueryType queryType, int start, int maxResults) throws Exception {
+        final String uri = "/ItemSearch.aspx?Version=20131101&output=js&ttbkey=" + ttbKey + 
+        		"&start=" + start + "&MaxResults=" + maxResults + "&queryType=" + queryType.name() + "&Query=" + query;
+        
+        log.info("URI ::: {}", BASE_URL + uri);
 
-        log.info("URL ::: {}", call);
-
-        return null;
+        return webClient
+        		.get()
+        		.uri(uri)
+        		.exchange()
+        		.flatMap(response -> response.bodyToMono(BookSearch.class));
     }
 }
