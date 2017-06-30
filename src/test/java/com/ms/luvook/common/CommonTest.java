@@ -1,5 +1,6 @@
-package com.ms.luvook.book;
+package com.ms.luvook.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,26 +12,21 @@ import org.springframework.web.reactive.function.client.WebClient;
  * Created by vivie on 2017-05-13.
  */
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class BookTest {
+public class CommonTest {
     private WebClient webClient = WebClient.create("http://localhost:8080");
 
     @Test
     public void test() throws Exception {
-        final String query = "Query";
+        String test = "123";
 
-        webClient
-                .get()
-                .uri("/test/"+query)
-                .exchange()
-                .log()
-                .flatMap(response -> response.bodyToMono(String.class))
-                .subscribe(s -> {
-                    System.out.println("subscribe");
-                    System.out.println(s);
-                });
+        log.info(test.hashCode()+"");
 
-        Thread.sleep(10000);
+        test += "1234";
+
+        log.info(test.hashCode()+"");
+
     }
 }

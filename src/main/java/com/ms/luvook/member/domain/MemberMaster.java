@@ -1,5 +1,6 @@
 package com.ms.luvook.member.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Date;
  * Created by vivie on 2017-06-08.
  */
 @Data
+@AllArgsConstructor
 @Entity
 @Table(name = "member_master")
 public class MemberMaster {
@@ -54,4 +56,28 @@ public class MemberMaster {
     private Date modDate;
 
     public MemberMaster() {}
+
+    public MemberMaster(String name, String email, String password, String introduction,
+                        String profileImg, String backgroundImg, MemberType memberType,
+                        Date birthdate, Date regDate, Date modDate) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.introduction = introduction;
+        this.profileImg = profileImg;
+        this.backgroundImg = backgroundImg;
+        this.memberType = memberType;
+        this.birthdate = birthdate;
+        this.regDate = regDate;
+        this.modDate = modDate;
+    }
+
+    public MemberMaster initializeRegAndModDate(){
+        final Date current = new Date();
+
+        this.regDate = current;
+        this.modDate = current;
+
+        return this;
+    }
 }
