@@ -26,8 +26,8 @@ public class MemberController {
     @PostMapping("/signup")
     public Result signup(MemberMaster memberMaster, HttpSession session){
         Result result = Result.newInstance();
-        MemberMaster createdMemberMaster = memberService.signup(memberMaster);
-        setSession(session, createdMemberMaster);
+        MemberMaster createdMember = memberService.signup(memberMaster);
+        session.setAttribute("member",createdMember);
         result.success();
 
         return result;
@@ -35,38 +35,24 @@ public class MemberController {
 
     @GetMapping("/validateEmail")
     public Result validateEmail(String email){
-        boolean alreadyExist = memberService.validateEmail(email);
+        boolean alreadyExist = memberService.isExist(email);
         Result result = Result.newInstance();
 
         if(alreadyExist == false){
             result.success();
         }else {
-            result
-                .fail()
-                .setMessage("E-mail이 이미 존재합니다.");
+            result.fail()
+                  .setMessage("E-mail이 이미 존재합니다.");
         }
-
         return result;
     }
 
     @PostMapping("/signin")
     public Result signin(String email, String password, HttpSession session){
-        boolean isSuccess = memberService.signin(email, password);
-        Result result = Result.newInstance();
+        final MemberMaster loginMember = memberService.signin(email, password);
+        session.setAttribute("member",loginMember);
 
-        if(isSuccess == true){
-            result.success();
-            //setSession(session);
-        }else {
-            result
-                .fail()
-                .setMessage("회원정보가 일치하지 않습니다.");
-        }
-        return result;
-    }
-
-    public void setSession(HttpSession session, MemberMaster membermaster){
-        membermaster.setPassword(null);
-        session.setAttribute("member", membermaster);
+        return Result.newInstance()
+                     .success();
     }
 }

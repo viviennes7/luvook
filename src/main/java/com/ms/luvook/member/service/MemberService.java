@@ -7,9 +7,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Member;
-import java.util.Date;
-
 /**
  * Created by vivie on 2017-06-08.
  */
@@ -22,49 +19,35 @@ public class MemberService {
 
     public MemberMaster signup(MemberMaster memberMaster) {
         final String email = memberMaster.getEmail();
-
-        if(validateEmail(email) == false){
-            throw new IllegalArgumentException("이미 계정이 존재합니다.");
+        if( this.isExist(email) ){
+            throw new IllegalStateException("이미 계정이 존재합니다.");
         }
-
         final String password = memberMaster.getPassword();
         final String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
         memberMaster
             .initializeRegAndModDate()
             .setPassword(encodePassword);
-
         final MemberMaster createdMember = memberRepository.save(memberMaster);
-
         return createdMember;
     }
 
-    public boolean validateEmail(String email) {
-        boolean alreadyExist = false;
+    public boolean isExist(String email) {
+        boolean isExist = false;
         final MemberMaster member = memberRepository.findByEmail(email);
-
         if(member != null){
-            alreadyExist = true;
+            isExist = true;
         }
-
-        return alreadyExist;
+        return isExist;
     }
 
-    public boolean signin(String email, String password) {
-        boolean isSuccess = false;
+    public MemberMaster signin(String email, String password) {
 
         final MemberMaster memberMaster = memberRepository.findByEmail(email);
         final String encodePassword = memberMaster.getPassword();
-
         BCrypt.checkpw(password, encodePassword);
-
-        log.info("encodePass ::: {}", encodePassword);
-        log.info("memberMaster ::: {}", memberMaster);
-
         if(memberMaster != null){
-            isSuccess = true;
+            throw new IllegalStateException("로그인정보가 일치하지 않습니다.");
         }
-
-        return isSuccess;
+        return memberMaster;
     }
 }
