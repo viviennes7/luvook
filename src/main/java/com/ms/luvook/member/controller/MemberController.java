@@ -42,7 +42,7 @@ public class MemberController {
             result.success();
         }else {
             result.fail()
-                  .setMessage("E-mail이 이미 존재합니다.");
+                    .setMessage("E-mail이 이미 존재합니다.");
         }
         return result;
     }

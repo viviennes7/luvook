@@ -8,5 +8,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface MemberRepository extends JpaRepository<MemberMaster, Long>{
     MemberMaster findByEmail(String email);
-    MemberMaster findByEmailAndPassword(String email, String password);
 }

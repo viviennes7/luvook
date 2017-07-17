@@ -19,7 +19,6 @@ import java.util.Date;
  */
 @Slf4j
 @RunWith(SpringRunner.class)
-@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SignInTest {
 
@@ -29,7 +28,7 @@ public class SignInTest {
     @Test
     public void signup() throws Exception{
         MemberMaster memberMaster =
-                new MemberMaster("김민수",  "test1@naver.com", "123123",
+                new MemberMaster("김민수",  "test12@naver.com", "123123",
                         "반갑습니다.","img", "bgImg", MemberType.USER, new Date(), new Date(), new Date());
 
         memberService.signup(memberMaster);
@@ -43,5 +42,18 @@ public class SignInTest {
 
         memberService.signup(memberMaster);
         memberService.signup(memberMaster);
+    }
+
+    @Test
+    public void signin() throws Exception{
+        final String email = "viviennes7@naver.com";
+        final String passwd = "456552";
+        memberService.signin(email, passwd);
+    }
+    @Test(expected = IllegalStateException.class)
+    public void fialSignin() throws Exception{
+        final String email = "testtesttest123@naver.com";
+        final String passwd = "123123";
+        memberService.signin(email, passwd);
     }
 }

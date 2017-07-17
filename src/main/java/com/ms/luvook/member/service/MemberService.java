@@ -25,7 +25,6 @@ public class MemberService {
         final String password = memberMaster.getPassword();
         final String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
         memberMaster
-            .initializeRegAndModDate()
             .setPassword(encodePassword);
         final MemberMaster createdMember = memberRepository.save(memberMaster);
         return createdMember;
@@ -43,9 +42,15 @@ public class MemberService {
     public MemberMaster signin(String email, String password) {
 
         final MemberMaster memberMaster = memberRepository.findByEmail(email);
-        final String encodePassword = memberMaster.getPassword();
-        BCrypt.checkpw(password, encodePassword);
+        String encodePassword = null;
+        boolean isSuccess = false;
+
         if(memberMaster != null){
+            encodePassword = memberMaster.getPassword();
+            isSuccess = BCrypt.checkpw(password, encodePassword);
+        }
+
+        if(memberMaster == null || !isSuccess){
             throw new IllegalStateException("로그인정보가 일치하지 않습니다.");
         }
         return memberMaster;
