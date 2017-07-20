@@ -1,12 +1,11 @@
 package com.ms.luvook.member.domain;
 
-import com.ms.luvook.board.domain.BoardBook;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
+
 
 /**
  * Created by vivie on 2017-06-08.
@@ -20,7 +19,7 @@ public class MemberMaster {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private long memberId;
+    private int memberId;
 
     @Column(name = "name")
     private String name;
@@ -57,8 +56,8 @@ public class MemberMaster {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modDate;
 
-    @OneToMany(mappedBy = "member")
-    private List<BoardBook> boardBooks;
+//    @OneToMany(mappedBy = "member")
+//    private List<BoardBook> boardBooks;
 
     public MemberMaster() {}
 
