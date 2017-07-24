@@ -17,8 +17,8 @@ import java.util.Date;
  * Created by vivie on 2017-06-16.
  */
 @Slf4j
-@RunWith(SpringRunner.class)
 @Transactional
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SignInTest {
 
@@ -28,8 +28,8 @@ public class SignInTest {
     @Test
     public void signup() throws Exception{
         MemberMaster memberMaster =
-                new MemberMaster("김민수",  "test12@naver.com", "123123",
-                        "반갑습니다.","img", "bgImg", MemberType.USER, new Date(), new Date(), new Date());
+                new MemberMaster("김민수",  "test1@naver.com", "123123",
+                        "img", MemberType.USER, new Date(), new Date());
 
         memberService.signup(memberMaster);
     }
@@ -37,8 +37,8 @@ public class SignInTest {
     @Test(expected = IllegalStateException.class)
     public void duplicateSignup(){
         MemberMaster memberMaster =
-                new MemberMaster("김민수",  "test2@naver.com", "123123",
-                        "반갑습니다.","img", "bgImg", MemberType.USER, new Date(), new Date(), new Date());
+                new MemberMaster("김민수",  "test@naver.com", "123123",
+                        "img", MemberType.USER, new Date(), new Date());
 
         memberService.signup(memberMaster);
         memberService.signup(memberMaster);

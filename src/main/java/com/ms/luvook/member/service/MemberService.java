@@ -22,6 +22,9 @@ public class MemberService {
         if( this.isExist(email) ){
             throw new IllegalStateException("이미 계정이 존재합니다.");
         }
+
+
+
         final String password = memberMaster.getPassword();
         final String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
         memberMaster
