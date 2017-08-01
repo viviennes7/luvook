@@ -1,11 +1,13 @@
 package com.ms.luvook.member.service;
 
-import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.repository.MemberRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.repository.MemberRepository;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-06-08.

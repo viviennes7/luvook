@@ -1,11 +1,12 @@
 package com.ms.luvook.common;
 
-import com.ms.luvook.common.domain.Result;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.ErrorMsg;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.ms.luvook.common.domain.Result;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-06-16.

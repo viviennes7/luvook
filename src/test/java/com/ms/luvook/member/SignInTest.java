@@ -1,17 +1,22 @@
 package com.ms.luvook.member;
 
-import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.domain.MemberType;
-import com.ms.luvook.member.service.MemberService;
-import lombok.extern.slf4j.Slf4j;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
-import java.util.Date;
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.domain.MemberType;
+import com.ms.luvook.member.service.MemberService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-06-16.
@@ -46,10 +51,17 @@ public class SignInTest {
 
     @Test
     public void signin() throws Exception{
-        final String email = "viviennes7@naver.com";
-        final String passwd = "456552";
-        memberService.signin(email, passwd);
+        final String email = "signinTest@naver.com";
+        final String passwd = "123123";
+        MemberMaster memberMaster =
+                new MemberMaster("김민수",  email, passwd,
+                        "img", MemberType.USER, new Date(), new Date());
+        memberService.signup(memberMaster);
+        MemberMaster login = memberService.signin(email, passwd);
+        assertNotNull(login);
+        
     }
+    
     @Test(expected = IllegalStateException.class)
     public void fialSignin() throws Exception{
         final String email = "testtesttest123@naver.com";

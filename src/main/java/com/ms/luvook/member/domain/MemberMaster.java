@@ -1,12 +1,26 @@
 package com.ms.luvook.member.domain;
 
-import com.ms.luvook.board.domain.Board;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.ms.luvook.board.domain.Board;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 
 /**
@@ -53,7 +67,7 @@ public class MemberMaster {
 
     public MemberMaster() {}
 
-    public MemberMaster( String name, String email, String password,
+    public MemberMaster(String name, String email, String password,
                         String profileImg, MemberType memberType,
                         Date regDate, Date modDate) {
         this.name = name;
