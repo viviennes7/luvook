@@ -1,5 +1,6 @@
 package com.ms.luvook.board.controller;
 
+import com.ms.luvook.board.domain.BookBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +25,14 @@ import lombok.extern.slf4j.Slf4j;
 public class BoardController {
 
     @Autowired
-    private BoardService boardService;
+    private BoardService bookBoardService;
     
     @PostMapping("/")
-    public Result save(Board board){
-    	log.info("board ::: ", board);
-    	return null;
+    public Result save(BookBoard bookBoard){
+        Result result = Result.newInstance();
+        int boardId = bookBoardService.save(bookBoard);
+        result.success();
+    	return result;
     }
 
     @GetMapping("/{boardId}")

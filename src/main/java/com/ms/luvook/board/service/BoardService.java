@@ -1,6 +1,7 @@
 package com.ms.luvook.board.service;
 
 import com.ms.luvook.board.domain.Board;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-07-17.

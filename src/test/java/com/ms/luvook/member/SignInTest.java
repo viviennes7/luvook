@@ -1,6 +1,8 @@
 package com.ms.luvook.member;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.Date;
 
@@ -36,7 +38,9 @@ public class SignInTest {
                 new MemberMaster("김민수",  "test1@naver.com", "123123",
                         "img", MemberType.USER, new Date(), new Date());
 
-        memberService.signup(memberMaster);
+        MemberMaster signedupMember = memberService.signup(memberMaster);
+
+        assertEquals(memberMaster, signedupMember);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -63,7 +67,7 @@ public class SignInTest {
     }
     
     @Test(expected = IllegalStateException.class)
-    public void fialSignin() throws Exception{
+    public void failSignin() throws Exception{
         final String email = "testtesttest123@naver.com";
         final String passwd = "123123";
         memberService.signin(email, passwd);
