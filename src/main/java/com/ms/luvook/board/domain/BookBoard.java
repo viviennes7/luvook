@@ -1,10 +1,15 @@
 package com.ms.luvook.board.domain;
 
-import lombok.Data;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
-import javax.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @DiscriminatorValue("B")
 @Table(name = "board_book")
@@ -25,4 +30,14 @@ public class BookBoard extends Board {
     @Column(name = "isbn13")
     private long isbn13;
 
+	public BookBoard(int memberId, String contents, int grade, 
+					 String title, int categoryId, String cover, long isbn, long isbn13) {
+		super(memberId, contents, grade);
+		this.title = title;
+		this.categoryId = categoryId;	
+		this.cover = cover;
+		this.isbn = isbn;
+		this.isbn13 = isbn13;
+	}
+    
 }

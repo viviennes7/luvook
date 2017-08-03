@@ -1,6 +1,5 @@
 package com.ms.luvook.board.controller;
 
-import com.ms.luvook.board.domain.BookBoard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
 import com.ms.luvook.board.domain.Board;
+import com.ms.luvook.board.domain.BookBoard;
+import com.ms.luvook.board.domain.MovieBoard;
 import com.ms.luvook.board.service.BoardService;
 import com.ms.luvook.common.domain.Result;
 
@@ -30,19 +32,27 @@ public class BoardController {
     @Autowired
     private BoardService movieBoardService;
     
-    @PostMapping("/{boardType}")
-    public Result save(@PathVariable String boardType, BookBoard bookBoard){
+    private Gson gson;
+    
+    @PostMapping("/book")
+    public Result saveBook(BookBoard bookBoard){
         Result result = Result.newInstance();
-        BoardService boardService = this.getBoardService(boardType);
-        int boardId = boardService.save(bookBoard);
+        int boardId = bookBoardService.save(bookBoard);
+        result.success();
+    	return result;
+    }
+    
+    @PostMapping("/movie")
+    public Result saveMovie(MovieBoard movieBoard){
+        Result result = Result.newInstance();
+        int boardId = movieBoardService.save(movieBoard);
         result.success();
     	return result;
     }
 
-
     @GetMapping("/{boardId}")
     public Result find(@PathVariable int boardId){
-
+    	Result result = Result.newInstance();
         return null;
     }
 

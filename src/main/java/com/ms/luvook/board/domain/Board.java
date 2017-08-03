@@ -1,11 +1,29 @@
 package com.ms.luvook.board.domain;
 
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
-import lombok.Data;
 
-import javax.persistence.*;
-import java.util.Date;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 
@@ -13,6 +31,7 @@ import java.util.Date;
  * Created by vivie on 2017-07-17.
  */
 @Data
+@NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
@@ -50,6 +69,11 @@ public class Board {
     @JoinColumn(name = "member_id", insertable=false, updatable=false)
     private MemberMaster member;
 
-    //private Book book;
+	public Board(int memberId, String contents, int grade) {
+		super();
+		this.memberId = memberId;
+		this.contents = contents;
+		this.grade = grade;
+	}
 
 }

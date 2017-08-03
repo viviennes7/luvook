@@ -1,32 +1,49 @@
 package com.ms.luvook.board.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.repository.BoardRepository;
+import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.common.util.DateUtil;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
+@Transactional
 public abstract class AbstractBoardService implements BoardService{
 
 	@Autowired
 	private BoardRepository boardRepository;
 
 	@Override
+	public Board find(int boardId) {
+		return boardRepository.findById(boardId).get();
+	}
+	
+	@Override
+	public Board findAll() {
+		return null;
+	}
+	
+	@Override
 	public int save(Board board) {
 		DateUtil.initializeRegAndModDate(board);
-		DateUtil.initializeRegAndModDate(new BookBoardServiceImpl());
+		board.setIsUse(IsUse.Y);
 		Board savedBoard =  boardRepository.save(board);
-
-		log.info("savedBoard ::: ", savedBoard);
-
 		return savedBoard.getBoardId();
 	}
 	
 	@Override
+	public int update(Board board) {
+		return 0;
+	}
+	
+	@Override
 	public void delete(int boardId) {
-		
+		boardRepository.deleteById(boardId);
 	}
 	
 	@Override
@@ -51,9 +68,5 @@ public abstract class AbstractBoardService implements BoardService{
 	@Override
 	public int updateComment(BoardComment boardComment) {
 		return 0;
-	}
-
-	private void initializeRegAndModDate(){
-
 	}
 }
