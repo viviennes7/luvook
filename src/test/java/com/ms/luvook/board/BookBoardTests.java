@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.Test;
@@ -36,5 +38,16 @@ public class BookBoardTests {
 		
 		assertNotNull(savedBoard);
 		assertThat(savedBoard.getContents(), is(bookBoard.getContents()));
+	}
+	
+	@Test
+	public void findAll(){
+		final int pageNum = 1;
+		
+		List<Board> boards = bookBoardServiceImpl.findAll(pageNum);
+		
+		log.info("boards ::: " + boards);
+		
+		
 	}
 }

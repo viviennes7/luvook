@@ -1,6 +1,12 @@
 package com.ms.luvook.board.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ms.luvook.board.domain.Board;
@@ -20,12 +26,17 @@ public abstract class AbstractBoardService implements BoardService{
 
 	@Override
 	public Board find(int boardId) {
-		return boardRepository.findById(boardId).get();
+		Board board = boardRepository.findById(boardId).get();
+		
+		return board;
 	}
 	
 	@Override
-	public Board findAll() {
-		return null;
+	public List<Board> findAll(int pageNum) {
+		PageRequest page = PageRequest.of(pageNum, 10, new Sort(Direction.DESC, "boardId"));
+		Page<Board> result = boardRepository.findAll(page);
+		List<Board> boards = result.getContent();
+		return boards;
 	}
 	
 	@Override
@@ -58,6 +69,11 @@ public abstract class AbstractBoardService implements BoardService{
 	
 	@Override
 	public BoardComment findComment(int boardCommentId) {
+		return null;
+	}
+	
+	@Override
+	public List<BoardComment> findAllComment(int boardCommentId) {
 		return null;
 	}
 	

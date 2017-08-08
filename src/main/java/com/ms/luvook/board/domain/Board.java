@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
 
@@ -67,6 +68,7 @@ public class Board {
 
     @ManyToOne(optional=false)
     @JoinColumn(name = "member_id", insertable=false, updatable=false)
+    @JsonBackReference
     private MemberMaster member;
 
 	public Board(int memberId, String contents, int grade) {

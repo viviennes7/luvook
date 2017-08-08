@@ -1,7 +1,8 @@
 package com.ms.luvook.board.service;
 
+import java.util.List;
+
 import com.ms.luvook.board.domain.Board;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-07-17.
@@ -11,7 +12,7 @@ public interface BoardService extends BoardCommentService{
 	
 	Board find(int boardId);
 	
-	Board findAll();
+	List<Board> findAll(int pageNum);
 	
 	void delete(int boardId);
 	
