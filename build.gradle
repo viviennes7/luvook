@@ -28,11 +28,18 @@ repositories {
 
 
 dependencies {
+	def querydslVersion = "4.1.4"
+	compile ("com.querydsl:querydsl-core:$querydslVersion")
+    compile ("com.querydsl:querydsl-apt:$querydslVersion")
+    compile ("com.querydsl:querydsl-jpa:$querydslVersion")
+    
 	compile('org.springframework.boot:spring-boot-starter-aop')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-webflux')
+	
 	runtime('mysql:mysql-connector-java')
+	
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
