@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ms.luvook.board.domain.Board;
 
 import lombok.AllArgsConstructor;
@@ -63,6 +64,7 @@ public class MemberMaster {
     private Date modDate;
 
     @OneToMany(mappedBy = "member")
+    @JsonManagedReference
     private List<Board> boards;
 
     public MemberMaster() {}

@@ -1,11 +1,8 @@
 package com.ms.luvook.common.domain;
 
-import com.fasterxml.jackson.annotation.JsonEnumDefaultValue;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMethod;
+
+import lombok.Getter;
 
 /**
  * Created by vivie on 2017-06-16.
@@ -13,18 +10,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Getter
 public class Result {
-    public static final String SUCCESS_MESSAGE = "성공했습니다.";
-    public static final String SERVER_ERROR_MESSAGE = "서버에 문제가 발생했습니다.";
+    public static final String SUCCESS_MESSAGE = "성공";
+    public static final String SERVER_ERROR_MESSAGE = "실패";
 
     private HttpStatus statusCode;
     private String message;
     private String json;
+    private Object data;
     private int totalCount;
 
     private Result(){}
 
-    public static Result newInstance(){
-        return new Result();
+    public static Result successInstance(){
+        return new Result().success();
     }
 
     public Result success(){
@@ -59,7 +57,14 @@ public class Result {
         return this;
     }
 
+    
+    public Result setData(Object data) {
+    	this.data = data;
+    	return this;
+    }
+    
     public int getStatusCode() {
         return statusCode.value();
     }
+    
 }

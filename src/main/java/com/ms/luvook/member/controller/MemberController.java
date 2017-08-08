@@ -1,16 +1,18 @@
 package com.ms.luvook.member.controller;
 
-import com.ms.luvook.common.domain.Result;
-import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.service.MemberService;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import com.ms.luvook.common.domain.Result;
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.service.MemberService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-06-08.
@@ -25,7 +27,7 @@ public class MemberController {
 
     @PostMapping("/signup")
     public Result signup(MemberMaster memberMaster, HttpSession session){
-        Result result = Result.newInstance();
+        Result result = Result.successInstance();
         MemberMaster createdMember = memberService.signup(memberMaster);
         session.setAttribute("member",createdMember);
         result.success();
@@ -36,11 +38,9 @@ public class MemberController {
     @GetMapping("/validateEmail")
     public Result validateEmail(String email){
         boolean alreadyExist = memberService.isExist(email);
-        Result result = Result.newInstance();
+        Result result = Result.successInstance();
 
-        if(alreadyExist == false){
-            result.success();
-        }else {
+        if(alreadyExist == true){
             result.fail()
                     .setMessage("E-mail이 이미 존재합니다.");
         }
@@ -52,7 +52,6 @@ public class MemberController {
         final MemberMaster loginMember = memberService.signin(email, password);
         session.setAttribute("member",loginMember);
 
-        return Result.newInstance()
-                     .success();
+        return Result.successInstance();
     }
 }

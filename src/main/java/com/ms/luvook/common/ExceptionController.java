@@ -22,7 +22,7 @@ public class ExceptionController {
         final String errorMsg = e.getMessage();
 
         Result result = Result
-                        .newInstance()
+                        .successInstance()
                         .fail();
 
         if(errorMsg == null){
