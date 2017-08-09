@@ -23,7 +23,7 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-
+generated/
 /bin/
 authkey.properties
 /src/main/resources/config/authkey.properties
