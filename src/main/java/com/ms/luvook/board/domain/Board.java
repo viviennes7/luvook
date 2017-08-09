@@ -1,5 +1,6 @@
 package com.ms.luvook.board.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,20 +20,23 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.Setter;
+import lombok.ToString;
 
 
 /**
  * Created by vivie on 2017-07-17.
  */
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "boardId")
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn
@@ -68,14 +72,21 @@ public class Board {
 
     @ManyToOne(optional=false)
     @JoinColumn(name = "member_id", insertable=false, updatable=false)
-    @JsonBackReference
     private MemberMaster member;
 
 	public Board(int memberId, String contents, int grade) {
-		super();
 		this.memberId = memberId;
 		this.contents = contents;
 		this.grade = grade;
 	}
-
+	
+	public String getRegDate(){
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate);
+		return formattedDate; 
+	}
+	
+	public String getModDate(){
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate);
+		return formattedDate; 
+	}
 }

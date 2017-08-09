@@ -1,5 +1,6 @@
 package com.ms.luvook.member.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -17,18 +18,23 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ms.luvook.board.domain.Board;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 
 /**
  * Created by vivie on 2017-06-08.
  */
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "memberId")
 @Entity
 @Table(name = "member_master")
 public class MemberMaster {
@@ -46,6 +52,7 @@ public class MemberMaster {
 
     @Column(name = "password")
     @Basic(fetch = FetchType.LAZY)
+    @JsonIgnore
     private String password;
 
     @Column(name = "profile_img")
@@ -63,8 +70,8 @@ public class MemberMaster {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modDate;
 
-    @OneToMany(mappedBy = "member")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Board> boards;
 
     public MemberMaster() {}
@@ -80,4 +87,14 @@ public class MemberMaster {
         this.regDate = regDate;
         this.modDate = modDate;
     }
+    
+    public String getRegDate(){
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate);
+		return formattedDate; 
+	}
+	
+	public String getModDate(){
+        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate);
+		return formattedDate; 
+	}
 }

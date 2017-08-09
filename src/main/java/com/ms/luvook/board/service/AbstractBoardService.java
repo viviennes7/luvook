@@ -1,5 +1,6 @@
 package com.ms.luvook.board.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ public abstract class AbstractBoardService implements BoardService{
 	@Override
 	public Board find(int boardId) {
 		Board board = boardRepository.findById(boardId).get();
-		
 		return board;
 	}
 	
@@ -36,6 +36,7 @@ public abstract class AbstractBoardService implements BoardService{
 		PageRequest page = PageRequest.of(pageNum, 10, new Sort(Direction.DESC, "boardId"));
 		Page<Board> result = boardRepository.findAll(page);
 		List<Board> boards = result.getContent();
+
 		return boards;
 	}
 	
@@ -49,12 +50,17 @@ public abstract class AbstractBoardService implements BoardService{
 	
 	@Override
 	public int update(Board board) {
-		return 0;
+		board.setModDate(new Date());
+		Board updatedBoard = boardRepository.save(board);
+		return updatedBoard.getBoardId();
 	}
 	
 	@Override
 	public void delete(int boardId) {
-		boardRepository.deleteById(boardId);
+		Board board = this.find(boardId);
+		board.setIsUse(IsUse.N);
+		board.setModDate(new Date());
+		boardRepository.save(board);
 	}
 	
 	@Override
