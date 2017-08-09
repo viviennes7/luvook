@@ -3,6 +3,7 @@ package com.ms.luvook.board.service;
 import java.util.Date;
 import java.util.List;
 
+import com.ms.luvook.member.domain.MemberMaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +51,13 @@ public abstract class AbstractBoardService implements BoardService{
 	
 	@Override
 	public int update(Board board) {
-		board.setModDate(new Date());
+		final Board currentBoard = this.find(board.getBoardId());
+        final MemberMaster writtenMember = currentBoard.getMember();
+        final Date regDate = currentBoard.getRegDateObj();
+
+        board.setModDate(new Date());
+        board.setRegDate(regDate);
+		board.setMember(writtenMember);
 		Board updatedBoard = boardRepository.save(board);
 		return updatedBoard.getBoardId();
 	}

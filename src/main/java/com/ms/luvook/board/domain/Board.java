@@ -89,4 +89,8 @@ public class Board {
         String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate);
 		return formattedDate; 
 	}
+
+	public Date getRegDateObj(){
+	    return regDate;
+    }
 }

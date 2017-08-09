@@ -3,12 +3,7 @@ package com.ms.luvook.board.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BookBoard;
@@ -57,8 +52,8 @@ public class BoardController {
     	return result;
     }
 
-    //해결할것~
-    @PatchMapping("/board/book")
+    //임시로 Post - > Patch
+    @PostMapping(value = "/board/book/temp")
     public Result update(BookBoard bookBoard){
     	Result result = Result.successInstance();
     	boardService.update(bookBoard);
