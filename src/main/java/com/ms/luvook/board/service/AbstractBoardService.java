@@ -3,7 +3,6 @@ package com.ms.luvook.board.service;
 import java.util.Date;
 import java.util.List;
 
-import com.ms.luvook.member.domain.MemberMaster;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +15,7 @@ import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.common.util.DateUtil;
+import com.ms.luvook.member.domain.MemberMaster;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,12 +52,12 @@ public abstract class AbstractBoardService implements BoardService{
 	@Override
 	public int update(Board board) {
 		final Board currentBoard = this.find(board.getBoardId());
-        final MemberMaster writtenMember = currentBoard.getMember();
+        final MemberMaster boardWriter = currentBoard.getMember();
         final Date regDate = currentBoard.getRegDateObj();
 
         board.setModDate(new Date());
         board.setRegDate(regDate);
-		board.setMember(writtenMember);
+		board.setMember(boardWriter);
 		Board updatedBoard = boardRepository.save(board);
 		return updatedBoard.getBoardId();
 	}
@@ -68,6 +68,12 @@ public abstract class AbstractBoardService implements BoardService{
 		board.setIsUse(IsUse.N);
 		board.setModDate(new Date());
 		boardRepository.save(board);
+	}
+	
+	@Override
+	public List<Board> findAllByMember(int memberId) {
+		PageRequest pageRequest = PageRequest.of(0, 10);
+		return boardRepository.findAllByMemberIdOrderByBoardIdDesc(memberId, pageRequest);
 	}
 	
 	@Override

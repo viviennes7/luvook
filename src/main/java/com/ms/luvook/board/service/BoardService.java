@@ -19,5 +19,7 @@ public interface BoardService extends BoardCommentService{
 	int update(Board board);
 	
 	void toggleHeart(int memberId, int boardId);
+
+	List<Board> findAllByMember(int memberId);
 	
 }

@@ -3,7 +3,11 @@ package com.ms.luvook.board.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BookBoard;
@@ -68,10 +72,18 @@ public class BoardController {
         return result;
     }
 
-    @PostMapping("/board/heart/{boardId}")
+    @PostMapping("/board/{boardId}/heart")
     public Result toggleHeart(int memberId, @PathVariable int boardId){
 
     	return null;
+    }
+    
+    @GetMapping("/member/{memberId}/boards")
+    public Result findAllByMember(@PathVariable int memberId){
+    	Result result = Result.successInstance();
+    	List<Board> boards = boardService.findAllByMember(memberId);
+    	result.setData(boards);
+    	return result;
     }
 
 }
