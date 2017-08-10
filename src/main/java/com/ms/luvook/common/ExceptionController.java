@@ -21,9 +21,8 @@ public class ExceptionController {
     public Result exceptionHandler(Exception e){
         final String errorMsg = e.getMessage();
 
-        Result result = Result
-                        .successInstance()
-                        .fail();
+        Result result = new Result()
+                        	.fail();
 
         if(errorMsg == null){
             result.setMessage(Result.SERVER_ERROR_MESSAGE);

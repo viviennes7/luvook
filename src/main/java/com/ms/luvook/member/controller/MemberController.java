@@ -35,8 +35,8 @@ public class MemberController {
         return result;
     }
 
-    @GetMapping("/validateEmail")
-    public Result validateEmail(String email){
+    @GetMapping("/validate")
+    public Result validate(String email){
         boolean alreadyExist = memberService.isExist(email);
         Result result = Result.successInstance();
 

@@ -19,7 +19,7 @@ public class Result {
     private Object data;
     private int totalCount;
 
-    private Result(){}
+    public Result(){}
 
     public static Result successInstance(){
         return new Result().success();
