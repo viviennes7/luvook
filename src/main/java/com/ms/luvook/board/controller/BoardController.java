@@ -72,12 +72,6 @@ public class BoardController {
         return result;
     }
 
-    @PostMapping("/board/{boardId}/heart")
-    public Result toggleHeart(int memberId, @PathVariable int boardId){
-
-    	return null;
-    }
-    
     @GetMapping("/member/{memberId}/boards")
     public Result findAllByMember(@PathVariable int memberId){
     	Result result = Result.successInstance();
@@ -85,5 +79,14 @@ public class BoardController {
     	result.setData(boards);
     	return result;
     }
+    
+    @PostMapping("/board/{boardId}/heart")
+    public Result toggleHeart(int memberId, @PathVariable int boardId){
+    	Result result = Result.successInstance();
+    	boardService.toggleHeart(memberId, boardId);
+    	
+    	return result;
+    }
+    
 
 }

@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
+import com.ms.luvook.board.domain.BoardHeart;
+import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.common.util.DateUtil;
@@ -26,6 +28,11 @@ public abstract class AbstractBoardService implements BoardService{
 	@Autowired
 	private BoardRepository boardRepository;
 
+	@Autowired
+	private BoardHeartRepository boardHeartRepository;
+	
+	static String a = "1";
+	
 	@Override
 	public Board find(int boardId) {
 		Board board = boardRepository.findById(boardId).get();
@@ -78,7 +85,32 @@ public abstract class AbstractBoardService implements BoardService{
 	
 	@Override
 	public void toggleHeart(int memberId, int boardId) {
-		
+		BoardHeart preHeart = boardHeartRepository.findByMemberIdAndBoardId(memberId, boardId);
+		BoardHeart newOrModHeart = null;
+		if(preHeart == null){
+			newOrModHeart = this.newHeart(memberId, boardId);
+		}else{
+			newOrModHeart = this.modifyHeart(preHeart); 
+		}
+		boardHeartRepository.save(newOrModHeart);
+	}
+	
+	private BoardHeart newHeart(int memberId, int boardId){
+		BoardHeart newHeart = new BoardHeart();
+		newHeart.setMemberId(memberId);
+		newHeart.setBoardId(boardId);
+		newHeart.setIsUse(IsUse.Y);
+		DateUtil.initializeRegAndModDate(newHeart);
+		return newHeart;
+	}
+	
+	private BoardHeart modifyHeart(BoardHeart preHeart){
+		BoardHeart modHeart = new BoardHeart();
+		IsUse inverseIsUse = preHeart.getIsUse().inverse();
+		modHeart = preHeart;
+		modHeart.setIsUse(inverseIsUse);
+		modHeart.setModDate(new Date());
+		return modHeart;
 	}
 	
 	@Override
