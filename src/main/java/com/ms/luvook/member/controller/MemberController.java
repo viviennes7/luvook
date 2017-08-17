@@ -30,7 +30,6 @@ public class MemberController {
         Result result = Result.successInstance();
         MemberMaster createdMember = memberService.signup(memberMaster);
         session.setAttribute("member",createdMember);
-        result.success();
 
         return result;
     }
@@ -42,7 +41,7 @@ public class MemberController {
 
         if(alreadyExist == true){
             result.fail()
-                    .setMessage("E-mail이 이미 존재합니다.");
+                   .setMessage("E-mail이 이미 존재합니다.");
         }
         return result;
     }
@@ -51,7 +50,6 @@ public class MemberController {
     public Result signin(String email, String password, HttpSession session){
         final MemberMaster loginMember = memberService.signin(email, password);
         session.setAttribute("member",loginMember);
-
         return Result.successInstance();
     }
 }

@@ -2,12 +2,12 @@ package com.ms.luvook.member;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,45 +31,52 @@ public class SignInTest {
 
     @Autowired
     private MemberService memberService;
-
+    
+    private MemberMaster memberMaster;
+    
+    @Before
+    public void setup(){
+    	//Given
+    	memberMaster =new MemberMaster("김민수",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
+    }
+    
     @Test
     public void signup() throws Exception{
-        MemberMaster memberMaster =
-                new MemberMaster("김민수",  "test1@naver.com", "123123",
-                        "img", MemberType.USER, new Date(), new Date());
-
+    	//When
         MemberMaster signedupMember = memberService.signup(memberMaster);
 
+        //Then
         assertEquals(memberMaster, signedupMember);
     }
 
     @Test(expected = IllegalStateException.class)
     public void duplicateSignup(){
-        MemberMaster memberMaster =
-                new MemberMaster("김민수",  "test@naver.com", "123123",
-                        "img", MemberType.USER, new Date(), new Date());
-
+    	//When, Then
         memberService.signup(memberMaster);
         memberService.signup(memberMaster);
     }
 
     @Test
     public void signin() throws Exception{
-        final String email = "signinTest@naver.com";
+    	//Given
+        final String email = "test1@naver.com";
         final String passwd = "123123";
-        MemberMaster memberMaster =
-                new MemberMaster("김민수",  email, passwd,
-                        "img", MemberType.USER, new Date(), new Date());
+        
+        //When
         memberService.signup(memberMaster);
         MemberMaster login = memberService.signin(email, passwd);
-        assertNotNull(login);
         
+        //Then
+        assertNotNull(login);
     }
     
     @Test(expected = IllegalStateException.class)
     public void failSignin() throws Exception{
+    	//Given
         final String email = "testtesttest123@naver.com";
         final String passwd = "123123";
+        
+        //When, Then
         memberService.signin(email, passwd);
     }
 }
