@@ -1,6 +1,8 @@
 package com.ms.luvook.board;
 
-import java.util.Date;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
@@ -11,12 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ms.luvook.board.domain.BookBoard;
-import com.ms.luvook.board.repository.BoardHeartRepository;
+import com.ms.luvook.board.domain.BoardComment;
+import com.ms.luvook.board.repository.BoardCommentRepository;
 import com.ms.luvook.board.service.BoardService;
-import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.domain.MemberType;
-import com.ms.luvook.member.service.MemberService;
+import com.ms.luvook.common.domain.IsUse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,28 +29,38 @@ public class BoardCommentTests {
 	@Autowired
 	private BoardService boardService;
 	@Autowired
-	private MemberService memberService;
-	@Autowired
-	private BoardHeartRepository boardHeartRepository;
+	private BoardCommentRepository boardCommentRepository;
 	
-	private BookBoard bookBoard;
-	private MemberMaster memberMaster;
+	private BoardComment boardComment;
 	
 	@Before
 	public void setup(){
-		bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", 11111, 2222222); 
-		memberMaster = new MemberMaster("김민수",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
+		boardComment = new BoardComment(0, 1, 1, "댓글테스트", null, null, null);
 	}
 	
 	@Test
 	public void saveAndFind(){
+		//When
+		int savedCommentId = boardService.saveComment(boardComment);
+		BoardComment savedComment =  boardCommentRepository.findById(savedCommentId).get();
 		
+		//Then
+		assertNotNull(savedComment.getModDate());
+		assertNotNull(savedComment.getRegDate());
+		assertThat(savedComment.getIsUse(), is(IsUse.Y));
+		assertThat(boardComment.getContents(), is(savedComment.getContents()));
 	}
 	
 	@Test
 	public void delete(){
+		//Given
+		int savedCommentId = boardService.saveComment(boardComment);
 		
+		//When
+		boardService.deleteComment(savedCommentId);
+		BoardComment savedComment =  boardCommentRepository.findById(savedCommentId).get();
+		
+		//Then
+		assertThat(savedComment.getIsUse(), is(IsUse.N));
 	}
-	
-	
 }

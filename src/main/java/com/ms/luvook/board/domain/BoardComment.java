@@ -15,6 +15,7 @@ import javax.persistence.TemporalType;
 
 import com.ms.luvook.common.domain.IsUse;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "board_comment")
 public class BoardComment {
