@@ -3,11 +3,12 @@ package com.ms.luvook.board.service;
 import java.util.List;
 
 import com.ms.luvook.board.domain.Board;
+import com.ms.luvook.board.domain.BoardComment;
 
 /**
  * Created by vivie on 2017-07-17.
  */
-public interface BoardService extends BoardCommentService{
+public interface BoardService{
 	int save(Board board);
 	
 	Board find(int boardId);
@@ -22,4 +23,9 @@ public interface BoardService extends BoardCommentService{
 
 	List<Board> findAllByMember(int memberId);
 	
+	int saveComment(BoardComment boardComment);
+	
+	void deleteComment(int boardCommentId);
+	
+	int updateComment(BoardComment boardComment);
 }

@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
@@ -62,6 +63,16 @@ public class Board {
     @Enumerated(EnumType.STRING)
     private IsUse isUse;
 
+    @ManyToOne(optional=false)
+    @JoinColumn(name = "member_id", insertable=false, updatable=false)
+    private MemberMaster member;
+    
+    @Transient
+    private int heartCount;
+    
+    @Transient
+    private int commentCount;
+    
     @Column(name = "reg_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
@@ -70,10 +81,6 @@ public class Board {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modDate;
 
-    @ManyToOne(optional=false)
-    @JoinColumn(name = "member_id", insertable=false, updatable=false)
-    private MemberMaster member;
-
 	public Board(int memberId, String contents, int grade) {
 		this.memberId = memberId;
 		this.contents = contents;
@@ -81,13 +88,11 @@ public class Board {
 	}
 	
 	public String getRegDate(){
-        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate);
-		return formattedDate; 
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate); 
 	}
 	
 	public String getModDate(){
-        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate);
-		return formattedDate; 
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate); 
 	}
 
 	public Date getRegDateObj(){

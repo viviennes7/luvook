@@ -1,18 +1,55 @@
 package com.ms.luvook.board.domain;
 
-import java.sql.Date;
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.ms.luvook.common.domain.IsUse;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@Entity
+@Table(name = "board_comment")
 public class BoardComment {
+	@Id
+	@Column(name = "board_comment_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int boardCommentId;
+	
+	@Column(name = "member_id")
 	int memberId;
+	
+	@Column(name = "board_id")
 	int boardId;
+	
+	@Column(name = "contents")
 	String contents;
+	
+	@Column(name = "is_use")
+	@Enumerated(EnumType.STRING)
 	IsUse isUse;
+	
+	@Column(name = "reg_date")
+	@Temporal(TemporalType.TIMESTAMP)
 	Date regDate;
+	
+	@Column(name = "mod_date")
+	@Temporal(TemporalType.TIMESTAMP)
 	Date modDate;
 }
