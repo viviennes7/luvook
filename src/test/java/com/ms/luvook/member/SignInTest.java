@@ -36,7 +36,6 @@ public class SignInTest {
     
     @Before
     public void setup(){
-    	//Given
     	memberMaster =new MemberMaster("김민수",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
     }
     
