@@ -12,12 +12,9 @@ import com.ms.luvook.common.domain.Result;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Created by vivie on 2017-06-08.
  */
-@Slf4j
 @RestController
 @RequestMapping("/member")
 public class MemberController {
