@@ -3,19 +3,20 @@ package com.ms.luvook.common.domain;
 import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Created by vivie on 2017-06-16.
  */
 
 @Getter
+@ToString
 public class Result {
     public static final String SUCCESS_MESSAGE = "성공";
     public static final String SERVER_ERROR_MESSAGE = "실패";
 
     private HttpStatus statusCode;
     private String message;
-    private String json;
     private Object data;
     private int totalCount;
 
@@ -44,11 +45,6 @@ public class Result {
 
     public Result setMessage(String message) {
         this.message = message;
-        return this;
-    }
-
-    public Result setJson(String json) {
-        this.json = json;
         return this;
     }
 
