@@ -1,4 +1,4 @@
-package com.ms.luvook.common;
+package com.ms.luvook.common.error;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,8 +29,13 @@ public class ExceptionController {
         }else{
             result.setMessage(errorMsg);
         }
-        //log.error("Error ::: {}", e.getMessage());
-        e.printStackTrace(); //테스트 용도로 사용
+
+        if(log.isInfoEnabled()){
+            e.printStackTrace();
+        }else{
+            log.error("Error ::: {}", e.getMessage());
+        }
+
         return result;
     }
 }

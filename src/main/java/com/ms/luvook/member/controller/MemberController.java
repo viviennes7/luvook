@@ -1,16 +1,20 @@
 package com.ms.luvook.member.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ms.luvook.common.service.JwtService;
+import com.ms.luvook.member.domain.LoginVo;
+import com.sun.xml.internal.ws.resources.HttpserverMessages;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ms.luvook.common.domain.Result;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
+
+import java.util.Map;
 
 /**
  * Created by vivie on 2017-06-08.
@@ -21,6 +25,9 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/signup")
     public Result signup(MemberMaster memberMaster, HttpSession session){
@@ -43,10 +50,12 @@ public class MemberController {
         return result;
     }
 
-    @PostMapping("/signin")
-    public Result signin(String email, String password, HttpSession session){
-        final MemberMaster loginMember = memberService.signin(email, password);
-        session.setAttribute("member",loginMember);
+    @PostMapping(value="/signin")
+    public Result signin(@RequestBody LoginVo loginVo, HttpServletResponse response){
+        System.out.println(loginVo);
+        final MemberMaster loginMember = memberService.signin(loginVo);
+        String token = jwtService.createMember(loginMember);
+        response.setHeader("Authorization", token);
         return Result.successInstance();
     }
 }

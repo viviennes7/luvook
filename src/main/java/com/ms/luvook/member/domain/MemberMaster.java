@@ -89,12 +89,20 @@ public class MemberMaster {
     }
     
     public String getRegDate(){
-        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate);
-		return formattedDate; 
+        if(regDate == null){
+            return null;
+        }else {
+            String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate);
+            return formattedDate;
+        }
 	}
 	
 	public String getModDate(){
-        String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate);
-		return formattedDate; 
+        if(modDate == null){
+            return null;
+        }else {
+            String formattedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate);
+            return formattedDate;
+        }
 	}
 }

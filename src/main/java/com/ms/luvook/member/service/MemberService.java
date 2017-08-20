@@ -1,5 +1,6 @@
 package com.ms.luvook.member.service;
 
+import com.ms.luvook.member.domain.LoginVo;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,15 +42,15 @@ public class MemberService {
         return isExist;
     }
 
-    public MemberMaster signin(String email, String password) {
+    public MemberMaster signin(LoginVo loginVo) {
 
-        final MemberMaster memberMaster = memberRepository.findByEmail(email);
+        final MemberMaster memberMaster = memberRepository.findByEmail(loginVo.getEmail());
         String encodePassword = null;
         boolean isSuccess = false;
-
+    
         if(memberMaster != null){
             encodePassword = memberMaster.getPassword();
-            isSuccess = BCrypt.checkpw(password, encodePassword);
+            isSuccess = BCrypt.checkpw(loginVo.getPassword(), encodePassword);
         }
 
         if(memberMaster == null || !isSuccess){

@@ -11,21 +11,22 @@ import com.ms.luvook.common.service.JwtService;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor{
-	private static final String HEADER_AUTH = "X-Auth-Token";
-	
+	private static final String HEADER_AUTH = "Authorization";
+
 	@Autowired
 	private JwtService jwtService;
-	
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		final String token = request.getHeader(HEADER_AUTH);
-		
+
 		if(token != null && jwtService.isUsable(token)){
 			return true;
 		}else{
+			response.sendRedirect("/error/401");
 			return false;
 		}
-		
+
 	}
 }
