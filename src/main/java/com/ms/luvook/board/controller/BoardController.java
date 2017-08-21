@@ -15,12 +15,9 @@ import com.ms.luvook.board.domain.MovieBoard;
 import com.ms.luvook.board.service.BoardService;
 import com.ms.luvook.common.domain.Result;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * Created by vivie on 2017-07-17.
  */
-@Slf4j
 @RestController
 public class BoardController {
 

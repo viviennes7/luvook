@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @Aspect
 @Component
 public class LogAspect {
+	
 	private static final String ELAPSED_UNIT = "(ms)";
 	private static final String START_MESSAGE = "########## Start ::::: {} ##########";
 	private static final String END_MESSAGE = "########## End ::::: {} / {}##########";
@@ -36,8 +37,8 @@ public class LogAspect {
 		Object output = joinPoint.proceed();
 		
 		long end = System.currentTimeMillis();
-		log.info(END_MESSAGE, joinPoint.getSignature().toShortString(), (end-start) + ELAPSED_UNIT );
 		log.info(RESULT_MESSAGE, output);
+		log.info(END_MESSAGE, joinPoint.getSignature().toShortString(), (end-start) + ELAPSED_UNIT );
 		
 		return output;
 	}

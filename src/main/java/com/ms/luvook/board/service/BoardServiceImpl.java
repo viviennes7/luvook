@@ -44,9 +44,9 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public int update(Board board) {
-		final Board currentBoard = this.find(board.getBoardId());
-		final MemberMaster boardWriter = currentBoard.getMember();
-		final Date regDate = currentBoard.getRegDateObj();
+		Board currentBoard = this.find(board.getBoardId());
+		MemberMaster boardWriter = currentBoard.getMember();
+		Date regDate = currentBoard.getRegDateObj();
 		
 		board.setModDate(new Date());
 		board.setRegDate(regDate);

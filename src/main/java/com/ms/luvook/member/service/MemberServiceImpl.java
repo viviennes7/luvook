@@ -45,17 +45,16 @@ public class MemberServiceImpl implements MemberService{
     }
 
     public MemberMaster signin(LoginVo loginVo) {
-
         MemberMaster memberMaster = memberRepository.findByEmail(loginVo.getEmail());
         String encodePassword = null;
-        boolean isSuccess = false;
+        boolean isAccordPassword = false;
     
         if(memberMaster != null){
             encodePassword = memberMaster.getPassword();
-            isSuccess = BCrypt.checkpw(loginVo.getPassword(), encodePassword);
+            isAccordPassword = BCrypt.checkpw(loginVo.getPassword(), encodePassword);
         }
 
-        if(memberMaster == null || !isSuccess){
+        if(memberMaster == null || !isAccordPassword){
             throw new IllegalStateException("로그인정보가 일치하지 않습니다.");
         }
         return memberMaster;

@@ -32,7 +32,11 @@ public class JwtServiceImpl implements JwtService{
 		try {
 			key = "luvookSecret".getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			log.error("Making JWT Key Error");
+			if(log.isInfoEnabled()){
+				e.printStackTrace();
+			}else{
+				log.error("Making JWT Key Error ::: {}", e.getMessage());
+			}
 		}
 		
 		return key;
@@ -54,6 +58,5 @@ public class JwtServiceImpl implements JwtService{
 			}
 			return false;
 		}
-		
 	}
 }
