@@ -20,7 +20,6 @@ public class JwtServiceImpl implements JwtService{
 		String jwt = Jwts.builder()
 				  .setHeaderParam("typ", "JWT")
 				  .setHeaderParam("regDate", System.currentTimeMillis())
-//				  .setExpiration(new Date())
 				  .setSubject("user")
 				  .claim("member", member)
 				  .signWith(SignatureAlgorithm.HS256, this.generateKey())
@@ -53,7 +52,6 @@ public class JwtServiceImpl implements JwtService{
 			}else{
 				log.error(e.getMessage());
 			}
-			
 			return false;
 		}
 		

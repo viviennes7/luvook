@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.service.MemberService;
+import com.ms.luvook.member.service.MemberServiceImpl;
 
 /**
  * Created by vivie on 2017-06-16.
@@ -25,7 +25,7 @@ import com.ms.luvook.member.service.MemberService;
 public class SignInTest {
 
     @Autowired
-    private MemberService memberService;
+    private MemberServiceImpl memberService;
     
     private MemberMaster memberMaster;
     
