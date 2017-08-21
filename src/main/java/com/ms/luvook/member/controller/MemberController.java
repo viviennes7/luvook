@@ -1,7 +1,6 @@
 package com.ms.luvook.member.controller;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +29,10 @@ public class MemberController {
     private JwtService jwtService;
 
     @PostMapping("/signup")
-    public Result signup(MemberMaster memberMaster, HttpSession session){
+    public Result signup(MemberMaster memberMaster){
         Result result = Result.successInstance();
         MemberMaster createdMember = memberService.signup(memberMaster);
-        session.setAttribute("member",createdMember);
+        result.setData(createdMember);
         return result;
     }
 
