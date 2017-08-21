@@ -1,19 +1,18 @@
 package com.ms.luvook.member.service;
 
-import com.ms.luvook.member.domain.LoginVo;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ms.luvook.common.util.EntityUtils;
+import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.repository.MemberRepository;
-
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Created by vivie on 2017-06-08.
  */
-@Slf4j
 @Service
 public class MemberService {
 
@@ -21,21 +20,24 @@ public class MemberService {
     private MemberRepository memberRepository;
 
     public MemberMaster signup(MemberMaster memberMaster) {
-        final String email = memberMaster.getEmail();
+        String email = memberMaster.getEmail();
         if( this.isExist(email) ){
             throw new IllegalStateException("이미 계정이 존재합니다.");
         }
-        final String password = memberMaster.getPassword();
-        final String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        memberMaster
-            .setPassword(encodePassword);
-        final MemberMaster createdMember = memberRepository.save(memberMaster);
+        
+        String password = memberMaster.getPassword();
+        String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        memberMaster.setPassword(encodePassword);
+        memberMaster.setMemberType(MemberType.USER);
+        EntityUtils.initializeRegAndModDate(memberMaster);
+        
+        MemberMaster createdMember = memberRepository.save(memberMaster);
         return createdMember;
     }
 
     public boolean isExist(String email) {
         boolean isExist = false;
-        final MemberMaster member = memberRepository.findByEmail(email);
+        MemberMaster member = memberRepository.findByEmail(email);
         if(member != null){
             isExist = true;
         }
@@ -44,7 +46,7 @@ public class MemberService {
 
     public MemberMaster signin(LoginVo loginVo) {
 
-        final MemberMaster memberMaster = memberRepository.findByEmail(loginVo.getEmail());
+        MemberMaster memberMaster = memberRepository.findByEmail(loginVo.getEmail());
         String encodePassword = null;
         boolean isSuccess = false;
     
