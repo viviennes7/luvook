@@ -19,13 +19,13 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ms.luvook.board.domain.Board;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 
 /**
  * Created by vivie on 2017-06-08.
@@ -44,15 +44,15 @@ public class MemberMaster {
     @Column(name = "member_id")
     private int memberId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "nickname")
+    private String nickname;
 
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
     @Basic(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "profile_img")
@@ -76,10 +76,10 @@ public class MemberMaster {
 
     public MemberMaster() {}
 
-    public MemberMaster(String name, String email, String password,
+    public MemberMaster(String nickname, String email, String password,
                         String profileImg, MemberType memberType,
                         Date regDate, Date modDate) {
-        this.name = name;
+        this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.profileImg = profileImg;

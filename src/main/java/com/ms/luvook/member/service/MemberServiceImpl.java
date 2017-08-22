@@ -32,9 +32,12 @@ public class MemberServiceImpl implements MemberService{
         EntityUtils.initializeRegAndModDate(memberMaster);
         
         MemberMaster createdMember = memberRepository.save(memberMaster);
+        int memberId = createdMember.getMemberId();
+        createdMember.setNickname("luVook(" + memberId + ")");
+        memberRepository.save(memberMaster);
         return createdMember;
     }
-
+    
     public boolean isExist(String email) {
         boolean isExist = false;
         MemberMaster member = memberRepository.findByEmail(email);

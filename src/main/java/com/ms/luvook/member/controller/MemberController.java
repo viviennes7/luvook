@@ -29,7 +29,7 @@ public class MemberController {
     private JwtService jwtService;
 
     @PostMapping("/signup")
-    public Result signup(MemberMaster memberMaster){
+    public Result signup(@RequestBody MemberMaster memberMaster){
         Result result = Result.successInstance();
         MemberMaster createdMember = memberService.signup(memberMaster);
         result.setData(createdMember);
