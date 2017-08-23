@@ -1,6 +1,8 @@
 package com.ms.luvook.common.service;
 
 import java.io.UnsupportedEncodingException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
@@ -15,22 +17,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service("jwtService")
 public class JwtServiceImpl implements JwtService{
+
+	private static final String SALT =  "luvookSecret";
 	
 	public String createMember(MemberMaster member){
 		String jwt = Jwts.builder()
-				  .setHeaderParam("typ", "JWT")
-				  .setHeaderParam("regDate", System.currentTimeMillis())
-				  .setSubject("user")
-				  .claim("member", member)
-				  .signWith(SignatureAlgorithm.HS256, this.generateKey())
-				  .compact();
+						 .setHeaderParam("typ", "JWT")
+						 .setHeaderParam("regDate", System.currentTimeMillis())
+						 .setSubject("user")
+						 .claim("member", member)
+						 .signWith(SignatureAlgorithm.HS256, this.generateKey())
+						 .compact();
 		return jwt;
 	}
 	
 	private byte[] generateKey(){
 		byte[] key = null;
 		try {
-			key = "luvookSecret".getBytes("UTF-8");
+			key = SALT.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			if(log.isInfoEnabled()){
 				e.printStackTrace();
@@ -58,5 +62,24 @@ public class JwtServiceImpl implements JwtService{
 			}
 			return false;
 		}
+	}
+	
+	@Override
+	public Map<String, Object> get(String jwt, String key) {
+		Jws<Claims> claims = null;
+		try {
+			claims = Jwts.parser()
+						 .setSigningKey(SALT.getBytes("UTF-8"))
+						 .parseClaimsJws(jwt);
+		} catch (Exception e) {
+			if(log.isInfoEnabled()){
+				e.printStackTrace();
+			}else{
+				//401에러 띄우기
+			}
+		}
+		@SuppressWarnings("unchecked")
+		Map<String, Object> value = (LinkedHashMap<String, Object>)claims.getBody().get(key);
+		return value;
 	}
 }

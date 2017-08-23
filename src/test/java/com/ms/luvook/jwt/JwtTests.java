@@ -38,14 +38,26 @@ public class JwtTests {
 				  .setSigningKey("luvookSecret".getBytes("UTF-8"))
 				  .parseClaimsJws(jwt);
 		
-		@SuppressWarnings("rawtypes")
-		Map tokenMember = (LinkedHashMap)claims.getBody().get("member");
+		@SuppressWarnings("unchecked")
+		Map<String, Object> tokenMember = (LinkedHashMap<String, Object>)claims.getBody().get("member");
 		
 		//Then
 		log.info("jwt ::: {}", jwt);
 		log.info("tokenMember::: {}", tokenMember);
 		assertThat(memberMaster.getEmail(), is(tokenMember.get("email")));
 		
+	}
+	
+	@Test
+	public void getJwtTest(){
+		//Given
+		String jwt = jwtService.createMember(memberMaster);
+		
+		//When
+		Map<String, Object> memberMap = jwtService.get(jwt, "member");
+		
+		//Then
+		assertThat(memberMap.get("email"), is("test1@naver.com"));
 	}
 	
 }
