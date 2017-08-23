@@ -18,7 +18,9 @@ import com.ms.luvook.member.repository.MemberRepository;
  */
 @Service("memberService")
 public class MemberServiceImpl implements MemberService{
-
+	
+	private static final String PROFILE_DEFAULT_PATH = "assets/img/profile_default.jpg";
+	
     @Autowired
     private MemberRepository memberRepository;
 
@@ -35,6 +37,7 @@ public class MemberServiceImpl implements MemberService{
         String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
         memberMaster.setPassword(encodePassword);
         memberMaster.setMemberType(MemberType.USER);
+        memberMaster.setProfileImg(PROFILE_DEFAULT_PATH);
         EntityUtils.initializeRegAndModDate(memberMaster);
         
         MemberMaster createdMember = memberRepository.save(memberMaster);
