@@ -17,4 +17,6 @@ public interface MemberService {
 
     MemberMaster signin(LoginVo loginVo);
     
+    MemberMaster signin(String jwt);
+    
 }

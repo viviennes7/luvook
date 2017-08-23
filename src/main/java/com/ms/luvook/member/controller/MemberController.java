@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.luvook.common.domain.Result;
@@ -46,11 +47,21 @@ public class MemberController {
         return result;
     }
 
+    @PostMapping(value="/signin/jwt")
+    public Result signin(@RequestParam(value="jwt") String jwt){
+    	Result result = Result.successInstance();
+    	MemberMaster loginMember = memberService.signin(jwt);
+    	result.setData(loginMember);
+    	return result;
+    }
+    
     @PostMapping(value="/signin")
     public Result signin(@RequestBody LoginVo loginVo, HttpServletResponse response){
+    	Result result = Result.successInstance();
         MemberMaster loginMember = memberService.signin(loginVo);
         String token = jwtService.createMember(loginMember);
         response.setHeader("Authorization", token);
-        return Result.successInstance();
+        result.setData(loginMember);
+        return result;
     }
 }

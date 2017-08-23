@@ -1,7 +1,9 @@
 package com.ms.luvook.member;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberServiceImpl;
@@ -27,11 +30,14 @@ public class SignInTest {
     @Autowired
     private MemberServiceImpl memberService;
     
+    @Autowired
+    private JwtService jwtService;
+    
     private MemberMaster memberMaster;
     
     @Before
     public void setup(){
-    	memberMaster =new MemberMaster("김민수",  "test1@naver.com", "123123", null, null, null, null);
+    	memberMaster =new MemberMaster("test_nickname",  "test1@naver.com", "123123", null, null, null, null);
     }
     
     @Test
@@ -63,6 +69,19 @@ public class SignInTest {
         
         //Then
         assertNotNull(login);
+    }
+    
+    @Test
+    public void signinJwt() throws Exception{
+    	//Given
+    	MemberMaster signedupMember = memberService.signup(memberMaster);
+		String jwt = jwtService.createMember(signedupMember);
+		
+		//When
+		MemberMaster signedinMember = memberService.signin(jwt);
+		
+		//Then
+		assertThat(signedinMember.getEmail(), is(signedupMember.getEmail()));
     }
     
     @Test(expected = IllegalStateException.class)

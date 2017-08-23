@@ -1,9 +1,12 @@
 package com.ms.luvook.member.service;
 
+import java.util.Map;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.util.EntityUtils;
 import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
@@ -19,6 +22,9 @@ public class MemberServiceImpl implements MemberService{
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private JwtService jwtService;
+    
     public MemberMaster signup(MemberMaster memberMaster) {
         String email = memberMaster.getEmail();
         if( this.isExist(email) ){
@@ -62,4 +68,12 @@ public class MemberServiceImpl implements MemberService{
         }
         return memberMaster;
     }
+
+	@Override
+	public MemberMaster signin(String jwt) {
+		Map<String, Object> memberMap = jwtService.get(jwt, "member");
+		String email = memberMap.get("email").toString();
+		MemberMaster memberMaster = memberRepository.findByEmail(email);
+		return memberMaster;
+	}
 }
