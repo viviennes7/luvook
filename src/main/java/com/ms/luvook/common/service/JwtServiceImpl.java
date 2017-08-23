@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.ms.luvook.common.error.UnauthorizedException;
 import com.ms.luvook.member.domain.MemberMaster;
 
 import io.jsonwebtoken.Claims;
@@ -60,7 +61,7 @@ public class JwtServiceImpl implements JwtService{
 			}else{
 				log.error(e.getMessage());
 			}
-			return false;
+			throw new UnauthorizedException();
 		}
 	}
 	
@@ -75,8 +76,9 @@ public class JwtServiceImpl implements JwtService{
 			if(log.isInfoEnabled()){
 				e.printStackTrace();
 			}else{
-				//401에러 띄우기
+				log.error(e.getMessage());
 			}
+			throw new UnauthorizedException();		
 		}
 		@SuppressWarnings("unchecked")
 		Map<String, Object> value = (LinkedHashMap<String, Object>)claims.getBody().get(key);

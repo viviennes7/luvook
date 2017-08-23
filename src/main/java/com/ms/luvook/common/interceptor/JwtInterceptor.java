@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.ms.luvook.common.error.UnauthorizedException;
 import com.ms.luvook.common.service.JwtService;
 
 @Component
@@ -24,8 +25,7 @@ public class JwtInterceptor implements HandlerInterceptor{
 		if(token != null && jwtService.isUsable(token)){
 			return true;
 		}else{
-			response.sendRedirect("/error/401");
-			return false;
+			throw new UnauthorizedException();
 		}
 
 	}
