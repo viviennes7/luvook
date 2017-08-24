@@ -1,22 +1,22 @@
 package com.ms.luvook.book.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ms.luvook.book.domain.Book;
 import com.ms.luvook.book.domain.BookSearch;
 import com.ms.luvook.book.service.BookService;
 import com.ms.luvook.book.type.ItemIdType;
 import com.ms.luvook.book.type.QueryType;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+
 import reactor.core.publisher.Mono;
 
 /**
  * Created by vivie on 2017-05-11.
  */
 
-@Slf4j
 @RestController
 public class BookController{
 
