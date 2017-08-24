@@ -4,7 +4,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.ms.luvook.common.error.UnauthorizedException;
 import com.ms.luvook.member.domain.MemberMaster;
@@ -66,7 +70,9 @@ public class JwtServiceImpl implements JwtService{
 	}
 	
 	@Override
-	public Map<String, Object> get(String jwt, String key) {
+	public Map<String, Object> get(String key) {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		String jwt = request.getHeader("Authorization");
 		Jws<Claims> claims = null;
 		try {
 			claims = Jwts.parser()
