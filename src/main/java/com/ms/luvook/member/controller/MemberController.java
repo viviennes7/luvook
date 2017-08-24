@@ -5,14 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.luvook.common.domain.Result;
 import com.ms.luvook.common.service.JwtService;
-import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
 
@@ -47,21 +46,30 @@ public class MemberController {
         return result;
     }
 
-    @PostMapping(value="/signin/jwt")
-    public Result signin(@RequestParam(value="jwt") String jwt){
-    	Result result = Result.successInstance();
-    	MemberMaster loginMember = memberService.signin(jwt);
-    	result.setData(loginMember);
-    	return result;
-    }
-    
     @PostMapping(value="/signin")
-    public Result signin(@RequestBody LoginVo loginVo, HttpServletResponse response){
+    public Result signin(String email, String password, HttpServletResponse response){
     	Result result = Result.successInstance();
-        MemberMaster loginMember = memberService.signin(loginVo);
+        MemberMaster loginMember = memberService.signin(email, password);
         String token = jwtService.createMember(loginMember);
         response.setHeader("Authorization", token);
         result.setData(loginMember);
         return result;
+    }
+    
+    @PostMapping(value="/signin/jwt")
+    public Result signin(){
+    	Result result = Result.successInstance();
+    	MemberMaster loginMember = memberService.signinJwt();
+    	result.setData(loginMember);
+    	return result;
+    }
+    
+    @PutMapping(value="/info")
+    public Result updateInfo(String nickname, String password){
+    	Result result = Result.successInstance();
+    	memberService.updateInfo(nickname, password);
+    	
+    	return result;
+    	
     }
 }

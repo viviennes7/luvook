@@ -1,9 +1,7 @@
 package com.ms.luvook.member;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
@@ -15,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ms.luvook.common.service.JwtService;
-import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberServiceImpl;
 
@@ -60,38 +57,36 @@ public class SignInTest {
     public void signin() throws Exception{
     	//Given
         String email = "test1@naver.com";
-        String passwd = "123123";
-        LoginVo loginVo = new LoginVo(email, passwd);
+        String password = "123123";
         
         //When
         memberService.signup(memberMaster);
-        MemberMaster login = memberService.signin(loginVo);
+        MemberMaster login = memberService.signin(email, password);
         
         //Then
         assertNotNull(login);
     }
     
-    @Test
+    /*@Test
     public void signinJwt() throws Exception{
     	//Given
     	MemberMaster signedupMember = memberService.signup(memberMaster);
 		String jwt = jwtService.createMember(signedupMember);
 		
 		//When
-		MemberMaster signedinMember = memberService.signin(jwt);
+		MemberMaster signedinMember = memberService.signinJwt();
 		
 		//Then
 		assertThat(signedinMember.getEmail(), is(signedupMember.getEmail()));
-    }
+    }*/
     
     @Test(expected = IllegalStateException.class)
     public void failSignin() throws Exception{
     	//Given
         String email = "testtesttest123@naver.com";
-        String passwd = "123123";
-        LoginVo loginVo = new LoginVo(email, passwd);
+        String password = "123123";
         
         //When, Then
-        memberService.signin(loginVo);
+        memberService.signin(email, password);
     }
 }

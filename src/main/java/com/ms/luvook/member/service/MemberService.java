@@ -2,7 +2,6 @@ package com.ms.luvook.member.service;
 
 import org.springframework.stereotype.Service;
 
-import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
 
 /**
@@ -15,8 +14,10 @@ public interface MemberService {
 
     boolean isExist(String email);
 
-    MemberMaster signin(LoginVo loginVo);
+    MemberMaster signin(String email, String password);
     
-    MemberMaster signin(String jwt);
+    MemberMaster signinJwt();
+
+	void updateInfo(String nickname, String password);
     
 }

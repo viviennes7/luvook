@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.util.EntityUtils;
-import com.ms.luvook.member.domain.LoginVo;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.repository.MemberRepository;
@@ -56,14 +55,15 @@ public class MemberServiceImpl implements MemberService{
         return isExist;
     }
 
-    public MemberMaster signin(LoginVo loginVo) {
-        MemberMaster memberMaster = memberRepository.findByEmail(loginVo.getEmail());
+    @Override
+    public MemberMaster signin(String email, String password) {
+        MemberMaster memberMaster = memberRepository.findByEmail(email);
         String encodePassword = null;
         boolean isAccordPassword = false;
     
         if(memberMaster != null){
             encodePassword = memberMaster.getPassword();
-            isAccordPassword = BCrypt.checkpw(loginVo.getPassword(), encodePassword);
+            isAccordPassword = BCrypt.checkpw(password, encodePassword);
         }
 
         if(memberMaster == null || !isAccordPassword){
@@ -73,10 +73,33 @@ public class MemberServiceImpl implements MemberService{
     }
 
 	@Override
-	public MemberMaster signin(String jwt) {
-		Map<String, Object> memberMap = jwtService.get(jwt, "member");
+	public MemberMaster signinJwt() {
+		Map<String, Object> memberMap = jwtService.get("member");
 		String email = memberMap.get("email").toString();
 		MemberMaster memberMaster = memberRepository.findByEmail(email);
 		return memberMaster;
+	}
+
+	@Override
+	public void updateInfo(String nickname, String password) {
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int)memberMap.get("memberId");
+		MemberMaster currentMember = memberRepository.getOne(memberId);
+		String currentNickname = currentMember.getNickname();
+		
+		MemberMaster searchedMember = memberRepository.findByNickname(nickname);
+		
+		if(currentNickname.equals(nickname) || searchedMember == null ){
+			currentMember.setNickname(nickname);
+		}else{
+			throw new IllegalStateException("이미 닉네임이 존재합니다.");
+		}
+		
+		if(!password.equals("")){
+			String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
+			currentMember.setPassword(encodePassword);
+		}
+		
+		memberRepository.save(currentMember);
 	}
 }
