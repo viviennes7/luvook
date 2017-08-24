@@ -19,7 +19,6 @@ import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.common.util.EntityUtils;
-import com.ms.luvook.member.domain.MemberMaster;
 
 @Transactional
 @Component("boardService")
@@ -42,15 +41,16 @@ public class BoardServiceImpl implements BoardService{
 		return savedBoard.getBoardId();
 	}
 	
+	//나중에 한번 손볼것
 	@Override
 	public int update(Board board) {
-		Board currentBoard = this.find(board.getBoardId());
-		MemberMaster boardWriter = currentBoard.getMember();
+		Board currentBoard = boardRepository.getOne(board.getBoardId());
+		int writerId = currentBoard.getMemberId();
 		Date regDate = currentBoard.getRegDateObj();
 		
 		board.setModDate(new Date());
 		board.setRegDate(regDate);
-		board.setMember(boardWriter);
+		board.setMemberId(writerId);
 		Board updatedBoard = boardRepository.save(board);
 		
 		return updatedBoard.getBoardId();

@@ -46,7 +46,7 @@ public class BoardTests {
 	@Before
 	public void setup(){
 		bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", 11111, 2222222); 
-		memberMaster = new MemberMaster("김민수",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
+		memberMaster = new MemberMaster("%test_nickname",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
 	}
 	
 	@Test
@@ -63,7 +63,7 @@ public class BoardTests {
 	}
 	
 	@Test
-	public void deleteBookTest(){
+	public void deleteTest(){
 		//Given
 		int savedBookId = boardService.save(bookBoard);
 		
@@ -73,6 +73,30 @@ public class BoardTests {
 		
 		//Then
 		assertThat(savedBoard.getIsUse(), is(IsUse.N));
+	}
+
+	
+	//나중에 한번 손볼것
+	@Test
+	public void updateTest(){
+		//Given
+		bookBoard.setMemberId(0);
+		bookBoard.setRegDate(null);
+		log.info("   bookBoard ::: {}", bookBoard);
+		
+		BookBoard willUpdateBoard = bookBoard;
+		willUpdateBoard.setTitle("변경된 책제목");
+		boardService.save(bookBoard);
+		
+		//When
+		int updatedBoardId = boardService.update(willUpdateBoard);
+		BookBoard updatedBoard = (BookBoard)boardService.find(updatedBoardId);
+		log.info("   bookBoard ::: {}", bookBoard);
+		log.info("updatedBoard ::: {}", updatedBoard);
+		
+		//Then
+		assertThat(updatedBoard.getTitle(), is(willUpdateBoard.getTitle()));
+		
 	}
 	
 	@Test
@@ -98,16 +122,5 @@ public class BoardTests {
 		assertThat(boardHeart.getIsUse(), is(IsUse.Y));
 		
 	}
-	
-	/*@Test
-	public void setHeartCountTest(){
-		//When
-		int savedBookId = boardService.save(bookBoard);
-		Board savedBoard = boardService.find(savedBookId);
-		
-		for (int i = 0; i < 5; i++) {
-		}
-	}*/
-	
 	
 }
