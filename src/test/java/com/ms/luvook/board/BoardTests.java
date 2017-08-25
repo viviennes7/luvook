@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -45,7 +46,7 @@ public class BoardTests {
 	
 	@Before
 	public void setup(){
-		bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", 11111, 2222222); 
+		bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", "11111", "2222222"); 
 		memberMaster = new MemberMaster("%test_nickname",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
 	}
 	
@@ -121,6 +122,13 @@ public class BoardTests {
 		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBookId);
 		assertThat(boardHeart.getIsUse(), is(IsUse.Y));
 		
+	}
+	
+	@Test
+	public void findAll(){
+		List<Board> boards = boardService.findAll(0);
+		
+		log.info("boards ::: {}", boards);
 	}
 	
 }

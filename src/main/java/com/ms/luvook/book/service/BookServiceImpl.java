@@ -29,7 +29,7 @@ public class BookServiceImpl implements BookService{
     
     @Override
     public Mono<Book> findOne(String itemId, ItemIdType itemIdType) {
-        final String uri = "/ItemLookUp.aspx?itemIdType="+itemIdType.name()+"&ItemId="+itemId+"&output=js&Version=20131101&ttbkey=" + ttbKey;
+        final String uri = "/ItemLookUp.aspx?itemIdType="+itemIdType.name()+"&ItemId="+itemId+"&cover=big&output=js&Version=20131101&ttbkey=" + ttbKey;
 
         return webClient
 				.get()
@@ -52,5 +52,22 @@ public class BookServiceImpl implements BookService{
         		.uri(uri)
         		.exchange()
         		.flatMap(response -> response.bodyToMono(BookSearch.class));
+    }
+    
+    
+    /**
+     * QueryType 아래부분의 항목들 검색
+     * */
+    @Override
+    public Mono<BookSearch> findByType(QueryType queryType, int start, int maxResults){
+    	final String uri = "/ItemList.aspx?Version=20131101&Output=js&SearchTarget=book&TTBKey=" + ttbKey + 
+        		"&Start=" + start + "&MaxResults=" + maxResults + "&QueryType=" + queryType.name();
+    	
+    	return webClient
+        		.get()
+        		.uri(uri)
+        		.exchange()
+        		.flatMap(response -> response.bodyToMono(BookSearch.class));
+
     }
 }

@@ -36,4 +36,12 @@ public class BookController{
     	
         return bookService.find(query, QueryType.valueOf(queryType), start, maxResults);
     }
+    
+    @GetMapping(value = "/{queryType}/books")
+    public Mono<BookSearch> findByType(@PathVariable String queryType,
+									   int start, int maxResults) throws Exception {
+
+    	return bookService.findByType(QueryType.valueOf(queryType), start, maxResults);
+    }
+    
 }

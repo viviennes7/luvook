@@ -13,4 +13,5 @@ import reactor.core.publisher.Mono;
 public interface BookService {
     Mono<Book> findOne(String itemId, ItemIdType itemIdType);
     Mono<BookSearch> find(String query, QueryType queryType, int start, int maxResults);
+    Mono<BookSearch> findByType(QueryType queryType, int start, int maxResults);
 }

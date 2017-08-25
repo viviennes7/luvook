@@ -5,10 +5,14 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("B")
@@ -25,13 +29,13 @@ public class BookBoard extends Board {
     private String cover;
 
     @Column(name = "isbn")
-    private long isbn;
+    private String isbn;
 
     @Column(name = "isbn13")
-    private long isbn13;
+    private String isbn13;
 
 	public BookBoard(int memberId, String contents, int grade, 
-					 String title, int categoryId, String cover, long isbn, long isbn13) {
+					 String title, int categoryId, String cover, String isbn, String isbn13) {
 		super(memberId, contents, grade);
 		this.title = title;
 		this.categoryId = categoryId;	
