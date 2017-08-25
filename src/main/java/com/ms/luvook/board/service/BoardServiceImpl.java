@@ -2,9 +2,9 @@ package com.ms.luvook.board.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -18,6 +18,7 @@ import com.ms.luvook.board.repository.BoardCommentRepository;
 import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
+import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.util.EntityUtils;
 
 @Transactional
@@ -33,10 +34,16 @@ public class BoardServiceImpl implements BoardService{
 	@Autowired
 	private BoardCommentRepository boardCommentRepository;
 	
+	@Autowired
+	private JwtService jwtService;
+	
 	@Override
 	public int save(Board board) {
-		EntityUtils.initializeRegAndModDate(board);
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
+		board.setMemberId(memberId);
 		board.setIsUse(IsUse.Y);
+		EntityUtils.initializeRegAndModDate(board);
 		Board savedBoard =  boardRepository.save(board);
 		return savedBoard.getBoardId();
 	}
@@ -75,9 +82,8 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public List<Board> findAll(int pageNum) {
-		PageRequest page = PageRequest.of(pageNum, 10, new Sort(Direction.DESC, "boardId"));
-		Page<Board> result = boardRepository.findAll(page);
-		List<Board> boards = result.getContent();
+		PageRequest page = PageRequest.of(pageNum, 20, new Sort(Direction.DESC, "boardId"));
+		List<Board> boards = boardRepository.findAllByIsUseOrderByBoardIdDesc(IsUse.Y,page);
 		
 		for(Board board : boards){
 			this.setHeartCount(board);
