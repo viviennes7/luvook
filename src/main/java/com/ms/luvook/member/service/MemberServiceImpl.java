@@ -102,4 +102,9 @@ public class MemberServiceImpl implements MemberService{
 		
 		memberRepository.save(currentMember);
 	}
+
+    @Override
+    public MemberMaster findByMemberId(int memberId) {
+        return memberRepository.findById(memberId).get();
+    }
 }

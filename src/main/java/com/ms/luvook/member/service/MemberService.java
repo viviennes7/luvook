@@ -19,5 +19,6 @@ public interface MemberService {
     MemberMaster signinJwt();
 
 	void updateInfo(String nickname, String password);
-    
+
+	MemberMaster findByMemberId(int memberId);
 }
