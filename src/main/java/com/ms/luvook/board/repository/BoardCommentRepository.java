@@ -10,5 +10,5 @@ import com.ms.luvook.common.domain.IsUse;
 
 @Repository
 public interface BoardCommentRepository extends JpaRepository<BoardComment, Integer>{
-	List<BoardComment> findByBoardIdAndIsUse(int boardId, IsUse isUse);
+	List<BoardComment> findByBoardIdAndIsUseOrderByBoardCommentId(int boardId, IsUse isUse);
 }

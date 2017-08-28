@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -24,6 +26,9 @@ import com.ms.luvook.common.util.EntityUtils;
 @Transactional
 @Component("boardService")
 public class BoardServiceImpl implements BoardService{
+
+	@Autowired
+	private MemberService memberService;
 
 	@Autowired
 	private BoardRepository boardRepository;
@@ -82,7 +87,7 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public List<Board> findAll(int pageNum) {
-		PageRequest page = PageRequest.of(pageNum, 20, new Sort(Direction.DESC, "boardId"));
+		PageRequest page = PageRequest.of(pageNum, 10, new Sort(Direction.DESC, "boardId"));
 		List<Board> boards = boardRepository.findAllByIsUseOrderByBoardIdDesc(IsUse.Y,page);
 		
 		for(Board board : boards){
@@ -114,7 +119,7 @@ public class BoardServiceImpl implements BoardService{
 	
 	private void setCommentCount(Board board){
 		int boardId = board.getBoardId();
-		int commentCount = boardCommentRepository.findByBoardIdAndIsUse(boardId, IsUse.Y).size();
+		int commentCount = boardCommentRepository.findByBoardIdAndIsUseOrderByBoardCommentId(boardId, IsUse.Y).size();
 		board.setCommentCount(commentCount);
 	}
 	
@@ -149,13 +154,24 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public int saveComment(BoardComment boardComment) {
-		EntityUtils.initializeRegAndModDate(boardComment);
+	public BoardComment saveComment(BoardComment boardComment) {
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
+		MemberMaster member = memberService.findByMemberId(memberId);
+		boardComment.setMemberId(memberId);
 		boardComment.setIsUse(IsUse.Y);
+		EntityUtils.initializeRegAndModDate(boardComment);
 		BoardComment savedComment = boardCommentRepository.save(boardComment);
-		return savedComment.getBoardCommentId();
+		savedComment.setMember(member);
+		return savedComment;
 	}
-	
+
+	@Override
+	public List<BoardComment> findAllComment(int boardId) {
+		return boardCommentRepository.findByBoardIdAndIsUseOrderByBoardCommentId(boardId, IsUse.Y);
+	}
+
+
 	@Override
 	public void deleteComment(int boardCommentId) {
 		BoardComment boardComment = boardCommentRepository.findById(boardCommentId).get();
@@ -166,6 +182,11 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public int updateComment(BoardComment boardComment) {
-		return 0;
+		int boardCommentId = boardComment.getBoardCommentId();
+		BoardComment currentComment = boardCommentRepository.findById(boardCommentId).get();
+		currentComment.setContents(boardComment.getContents());
+		currentComment.setModDate(new Date());
+		boardCommentRepository.save(currentComment);
+		return boardCommentId;
 	}
 }

@@ -2,12 +2,9 @@ package com.ms.luvook.board.controller;
 
 import java.util.List;
 
+import com.ms.luvook.board.domain.BoardComment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BookBoard;
@@ -85,5 +82,33 @@ public class BoardController {
     	return result;
     }
     
+    @PostMapping("/board/{boardId}/comment")
+    public Result saveComment(@PathVariable  int boardId, BoardComment comment){
+        Result result = Result.successInstance();
+        BoardComment savedComment = boardService.saveComment(comment);
+        result.setData(savedComment);
+        return result;
+    }
 
+    @GetMapping("/board/{boardId}/comment")
+    public Result findAllComment(@PathVariable int boardId){
+        Result result = Result.successInstance();
+        List<BoardComment> comments = boardService.findAllComment(boardId);
+        result.setData(comments);
+        return result;
+    }
+
+    @PutMapping("/board/{boardId}/comment/{commentId}")
+    public Result updateComment(@PathVariable int boardId, @PathVariable int commentId, BoardComment comment){
+        Result result = Result.successInstance();
+        boardService.updateComment(comment);
+        return result;
+    }
+
+    @DeleteMapping("/board/{boardId}/comment/{commentId}")
+    public Result deleteComment(@PathVariable int boardId, @PathVariable int commentId){
+        Result result = Result.successInstance();
+        boardService.deleteComment(commentId);
+        return result;
+    }
 }

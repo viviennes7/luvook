@@ -22,9 +22,11 @@ public interface BoardService{
 	void toggleHeart(int memberId, int boardId);
 
 	List<Board> findAllByMember(int memberId);
-	
-	int saveComment(BoardComment boardComment);
-	
+
+	BoardComment saveComment(BoardComment boardComment);
+
+	List<BoardComment> findAllComment(int boardId);
+
 	void deleteComment(int boardCommentId);
 	
 	int updateComment(BoardComment boardComment);
