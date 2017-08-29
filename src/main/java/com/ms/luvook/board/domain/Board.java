@@ -72,6 +72,9 @@ public class Board {
     
     @Transient
     private int commentCount;
+
+    @Transient
+    private Boolean isClickedHeart;
     
     @Column(name = "reg_date")
     @Temporal(TemporalType.TIMESTAMP)

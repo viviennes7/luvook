@@ -43,5 +43,5 @@ public class BookBoard extends Board {
 		this.isbn = isbn;
 		this.isbn13 = isbn13;
 	}
-    
+
 }

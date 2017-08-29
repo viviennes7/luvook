@@ -82,6 +82,7 @@ public class BoardServiceImpl implements BoardService{
 		Board board = boardRepository.findById(boardId).get();
 		this.setHeartCount(board);
 		this.setCommentCount(board);
+		this.setIsClickedHeart(board);
 		return board;
 	}
 	
@@ -93,16 +94,18 @@ public class BoardServiceImpl implements BoardService{
 		for(Board board : boards){
 			this.setHeartCount(board);
 			this.setCommentCount(board);
+			this.setIsClickedHeart(board);
 		}
 		
 		return boards;
 	}
 	
 	@Override
-	public List<Board> findAllByMember(int memberId) {
+	public List<Board> findAllByMember() {
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
 		PageRequest pageRequest = PageRequest.of(0, 10);
 		List<Board> boards = boardRepository.findAllByMemberIdOrderByBoardIdDesc(memberId, pageRequest);
-		
 		for(Board board : boards){
 			this.setHeartCount(board);
 			this.setCommentCount(board);
@@ -122,9 +125,22 @@ public class BoardServiceImpl implements BoardService{
 		int commentCount = boardCommentRepository.findByBoardIdAndIsUseOrderByBoardCommentId(boardId, IsUse.Y).size();
 		board.setCommentCount(commentCount);
 	}
+
+	private void setIsClickedHeart(Board board){
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
+		BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardIdAndIsUse(memberId, board.getBoardId(), IsUse.Y);
+		if(boardHeart == null){
+			board.setIsClickedHeart(false);
+		}else{
+			board.setIsClickedHeart(true);
+		}
+	}
 	
 	@Override
-	public void toggleHeart(int memberId, int boardId) {
+	public void toggleHeart(int boardId) {
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
 		BoardHeart preHeart = boardHeartRepository.findByMemberIdAndBoardId(memberId, boardId);
 		BoardHeart newOrModHeart = null;
 		if(preHeart == null){
