@@ -2,7 +2,6 @@ package com.ms.luvook.board.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,25 +30,19 @@ import lombok.ToString;
 public class BoardHeart {
 	
 	@Id
-	@Column(name = "board_heart_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int boardHeartId;
 	
-	@Column(name = "board_id")
 	private int boardId;
 
-	@Column(name = "member_id")
 	private int memberId;
 	
-	@Column(name = "is_use")
 	@Enumerated(EnumType.STRING)
 	private IsUse isUse;
 	
-	@Column(name = "reg_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date regDate;
 	
-	@Column(name = "mod_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date modDate;
 	

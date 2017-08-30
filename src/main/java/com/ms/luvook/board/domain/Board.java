@@ -45,7 +45,6 @@ import lombok.ToString;
 public class Board {
 
     @Id
-    @Column(name = "board_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int boardId;
 
@@ -53,13 +52,10 @@ public class Board {
     private int memberId;
 
     @Lob
-    @Column(name = "contents")
     private String contents;
 
-    @Column(name = "grade")
     private int grade;
 
-    @Column(name = "is_use")
     @Enumerated(EnumType.STRING)
     private IsUse isUse;
 
@@ -67,22 +63,20 @@ public class Board {
     @JoinColumn(name = "member_id", insertable=false, updatable=false)
     private MemberMaster member;
     
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date regDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modDate;
+
     @Transient
     private int heartCount;
     
     @Transient
     private int commentCount;
-
+    
     @Transient
     private Boolean isClickedHeart;
-    
-    @Column(name = "reg_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regDate;
-
-    @Column(name = "mod_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date modDate;
 
 	public Board(int memberId, String contents, int grade) {
 		this.memberId = memberId;

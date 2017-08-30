@@ -1,9 +1,9 @@
 package com.ms.luvook.board.domain;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,20 +19,18 @@ import lombok.ToString;
 @Table(name = "board_book")
 public class BookBoard extends Board {
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "category_id")
     private int categoryId;
 
-    @Column(name = "cover")
     private String cover;
-
-    @Column(name = "isbn")
+    
     private String isbn;
 
-    @Column(name = "isbn13")
     private String isbn13;
+
+    @Transient
+    private String bigCover;
 
 	public BookBoard(int memberId, String contents, int grade, 
 					 String title, int categoryId, String cover, String isbn, String isbn13) {
@@ -43,5 +41,8 @@ public class BookBoard extends Board {
 		this.isbn = isbn;
 		this.isbn13 = isbn13;
 	}
-
+	
+	public void setBigCover(){
+		this.bigCover = this.cover.replace("coversum", "cover");
+	}
 }

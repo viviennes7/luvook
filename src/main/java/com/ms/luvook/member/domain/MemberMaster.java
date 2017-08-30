@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -41,32 +40,24 @@ public class MemberMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_id")
     private int memberId;
 
-    @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
     @Basic(fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Column(name = "profile_img")
     private String profileImg;
 
-    @Column(name = "member_type")
     @Enumerated(EnumType.STRING)
     private MemberType memberType;
 
-    @Column(name = "reg_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
 
-    @Column(name = "mod_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modDate;
 
