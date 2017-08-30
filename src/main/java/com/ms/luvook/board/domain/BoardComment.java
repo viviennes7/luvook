@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.ms.luvook.common.domain.IsUse;
+import com.ms.luvook.common.util.DateCalculator;
 import com.ms.luvook.member.domain.MemberMaster;
 
 import lombok.AllArgsConstructor;
@@ -55,4 +56,12 @@ public class BoardComment {
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	Date modDate;
+	
+	public String getRegDate(){
+		return DateCalculator.calculateFromCurrent(regDate); 
+	}
+	
+	public String getModDate(){
+		return DateCalculator.calculateFromCurrent(modDate); 
+	}
 }

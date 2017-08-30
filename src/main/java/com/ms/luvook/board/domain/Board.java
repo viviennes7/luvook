@@ -1,6 +1,5 @@
 package com.ms.luvook.board.domain;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,6 +21,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 
 import com.ms.luvook.common.domain.IsUse;
+import com.ms.luvook.common.util.DateCalculator;
 import com.ms.luvook.member.domain.MemberMaster;
 
 import lombok.Getter;
@@ -85,11 +85,11 @@ public class Board {
 	}
 	
 	public String getRegDate(){
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(regDate); 
+		return DateCalculator.calculateFromCurrent(regDate); 
 	}
 	
 	public String getModDate(){
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(modDate); 
+		return DateCalculator.calculateFromCurrent(modDate); 
 	}
 
 	public Date getRegDateObj(){
