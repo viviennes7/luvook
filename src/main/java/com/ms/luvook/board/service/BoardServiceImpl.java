@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -16,12 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.domain.BoardHeart;
+import com.ms.luvook.board.domain.BookBoard;
 import com.ms.luvook.board.repository.BoardCommentRepository;
 import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.util.EntityUtils;
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.service.MemberService;
 
 @Transactional
 @Component("boardService")
@@ -80,9 +81,7 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public Board find(int boardId) {
 		Board board = boardRepository.findById(boardId).get();
-		this.setHeartCount(board);
-		this.setCommentCount(board);
-		this.setIsClickedHeart(board);
+		this.setAdditionalInfo(board);
 		return board;
 	}
 	
@@ -90,29 +89,32 @@ public class BoardServiceImpl implements BoardService{
 	public List<Board> findAll(int pageNum) {
 		PageRequest page = PageRequest.of(pageNum, 10, new Sort(Direction.DESC, "boardId"));
 		List<Board> boards = boardRepository.findAllByIsUseOrderByBoardIdDesc(IsUse.Y,page);
-		
 		for(Board board : boards){
-			this.setHeartCount(board);
-			this.setCommentCount(board);
-			this.setIsClickedHeart(board);
+			this.setAdditionalInfo(board);
 		}
 		
 		return boards;
 	}
 	
 	@Override
-	public List<Board> findAllByMember() {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
-		PageRequest pageRequest = PageRequest.of(0, 10);
+	public List<Board> findAllByMember(int memberId) {
+		PageRequest pageRequest = PageRequest.of(0, 20);
 		List<Board> boards = boardRepository.findAllByMemberIdOrderByBoardIdDesc(memberId, pageRequest);
 		for(Board board : boards){
-			this.setHeartCount(board);
-			this.setCommentCount(board);
+			this.setAdditionalInfo(board);
 		}
 		
 		return boards;
 	}
+	
+	//TODO : 나중에 QueryDSL로 짜볼것
+	private void setAdditionalInfo(Board board){
+		this.setHeartCount(board);
+		this.setCommentCount(board);
+		this.setIsClickedHeart(board);
+		((BookBoard)board).setBigCover();
+	}
+	
 	
 	private void setHeartCount(Board board){
 		int boardId = board.getBoardId();

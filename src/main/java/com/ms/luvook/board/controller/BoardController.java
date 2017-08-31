@@ -2,11 +2,16 @@ package com.ms.luvook.board.controller;
 
 import java.util.List;
 
-import com.ms.luvook.board.domain.BoardComment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.luvook.board.domain.Board;
+import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.domain.BookBoard;
 import com.ms.luvook.board.domain.MovieBoard;
 import com.ms.luvook.board.service.BoardService;
@@ -66,10 +71,10 @@ public class BoardController {
         return result;
     }
 
-    @GetMapping("/member/boards")
-    public Result findAllByMember(){
+    @GetMapping("/member/{memberId}/boards")
+    public Result findAllByMember(@PathVariable int memberId){
     	Result result = Result.successInstance();
-    	List<Board> boards = boardService.findAllByMember();
+    	List<Board> boards = boardService.findAllByMember(memberId);
     	result.setData(boards);
     	return result;
     }

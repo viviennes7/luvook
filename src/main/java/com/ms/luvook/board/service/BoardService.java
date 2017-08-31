@@ -21,7 +21,7 @@ public interface BoardService{
 	
 	void toggleHeart(int boardId);
 
-	List<Board> findAllByMember();
+	List<Board> findAllByMember(int memberId);
 
 	BoardComment saveComment(BoardComment boardComment);
 
