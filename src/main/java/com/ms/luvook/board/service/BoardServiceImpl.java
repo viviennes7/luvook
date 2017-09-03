@@ -148,7 +148,7 @@ public class BoardServiceImpl implements BoardService{
 		if(preHeart == null){
 			newOrModHeart = this.newHeart(memberId, boardId);
 		}else{
-			newOrModHeart = this.modifyHeart(preHeart); 
+			newOrModHeart = this.modifyHeart(preHeart);
 		}
 		boardHeartRepository.save(newOrModHeart);
 	}

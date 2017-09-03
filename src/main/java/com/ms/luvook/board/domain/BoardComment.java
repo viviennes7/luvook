@@ -58,10 +58,18 @@ public class BoardComment {
 	Date modDate;
 	
 	public String getRegDate(){
-		return DateCalculator.calculateFromCurrent(regDate); 
+		if(regDate == null){
+			return null;
+		}else {
+			return DateCalculator.calculateFromCurrent(regDate);
+		}
 	}
 	
 	public String getModDate(){
-		return DateCalculator.calculateFromCurrent(modDate); 
+		if(regDate == null){
+			return null;
+		}else {
+			return DateCalculator.calculateFromCurrent(modDate);
+		}
 	}
 }

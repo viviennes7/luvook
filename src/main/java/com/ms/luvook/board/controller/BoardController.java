@@ -95,7 +95,7 @@ public class BoardController {
         return result;
     }
 
-    @GetMapping("/board/{boardId}/comment")
+    @GetMapping("/board/{boardId}/comments")
     public Result findAllComment(@PathVariable int boardId){
         Result result = Result.successInstance();
         List<BoardComment> comments = boardService.findAllComment(boardId);
@@ -110,8 +110,8 @@ public class BoardController {
         return result;
     }
 
-    @DeleteMapping("/board/{boardId}/comment/{commentId}")
-    public Result deleteComment(@PathVariable int boardId, @PathVariable int commentId){
+    @DeleteMapping("/board/comment/{commentId}")
+    public Result deleteComment(@PathVariable int commentId){
         Result result = Result.successInstance();
         boardService.deleteComment(commentId);
         return result;
