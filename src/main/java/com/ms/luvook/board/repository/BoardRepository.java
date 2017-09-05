@@ -14,6 +14,6 @@ import com.ms.luvook.common.domain.IsUse;
  */
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Integer>{
-	List<Board> findAllByMemberIdOrderByBoardIdDesc(int memberId);
+	List<Board> findAllByMemberIdAndIsUseOrderByBoardIdDesc(int memberId, IsUse isUse);
 	List<Board> findAllByIsUseOrderByBoardIdDesc(IsUse isUse, Pageable pageable);
 }
