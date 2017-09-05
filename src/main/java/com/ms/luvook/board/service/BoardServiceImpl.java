@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.ms.luvook.common.util.HtmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -50,6 +51,8 @@ public class BoardServiceImpl implements BoardService{
 		board.setMemberId(memberId);
 		board.setIsUse(IsUse.Y);
 		EntityUtils.initializeRegAndModDate(board);
+		String contents = board.getContents();
+		board.setContents(HtmlUtils.parseBrTag(contents));
 		Board savedBoard =  boardRepository.save(board);
 		return savedBoard.getBoardId();
 	}
@@ -98,8 +101,7 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public List<Board> findAllByMember(int memberId) {
-		PageRequest pageRequest = PageRequest.of(0, 20);
-		List<Board> boards = boardRepository.findAllByMemberIdOrderByBoardIdDesc(memberId, pageRequest);
+		List<Board> boards = boardRepository.findAllByMemberIdOrderByBoardIdDesc(memberId);
 		for(Board board : boards){
 			this.setAdditionalInfo(board);
 		}
@@ -179,6 +181,8 @@ public class BoardServiceImpl implements BoardService{
 		boardComment.setMemberId(memberId);
 		boardComment.setIsUse(IsUse.Y);
 		EntityUtils.initializeRegAndModDate(boardComment);
+        String contents = boardComment.getContents();
+        boardComment.setContents(HtmlUtils.parseBrTag(contents));
 		BoardComment savedComment = boardCommentRepository.save(boardComment);
 		savedComment.setMember(member);
 		return savedComment;
