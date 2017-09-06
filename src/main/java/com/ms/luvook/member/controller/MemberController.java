@@ -72,4 +72,11 @@ public class MemberController {
     	return result;
     	
     }
+    
+    @PostMapping(value="/info/img")
+    public Result uploadProfileImg(String encodeImg){
+    	Result result = Result.successInstance();
+    	memberService.uploadProfileImg(encodeImg);
+    	return result;
+    }
 }

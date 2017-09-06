@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ms.luvook.common.service.JwtService;
+import com.ms.luvook.common.util.Base64Utils;
 import com.ms.luvook.common.util.EntityUtils;
+import com.ms.luvook.common.util.FileSystemUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.repository.MemberRepository;
@@ -107,4 +109,17 @@ public class MemberServiceImpl implements MemberService{
     public MemberMaster findByMemberId(int memberId) {
         return memberRepository.findById(memberId).get();
     }
+
+	@Override
+	public void uploadProfileImg(String encodeImg) {
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
+		byte[] img = Base64Utils.decodeBase64ToBytes(encodeImg);
+		String fileName = FileSystemUtils.save(img, Integer.toString(memberId));
+		String filePath =  "/img/profile/" + memberId + "/" + fileName;
+		
+		MemberMaster member = memberRepository.findById(memberId).get();
+		member.setProfileImg(filePath);
+		memberRepository.save(member);
+	}
 }

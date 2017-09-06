@@ -21,4 +21,6 @@ public interface MemberService {
 	void updateInfo(String nickname, String password);
 
 	MemberMaster findByMemberId(int memberId);
+
+	void uploadProfileImg(String encodeImg);
 }
