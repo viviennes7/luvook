@@ -20,7 +20,7 @@ import com.ms.luvook.member.repository.MemberRepository;
 @Service("memberService")
 public class MemberServiceImpl implements MemberService{
 	
-	private static final String PROFILE_DEFAULT_PATH = "assets/img/profile_default.jpg";
+	private static final String PROFILE_DEFAULT_PATH = "/img/0/profile_default.jpg";
 	
     @Autowired
     private MemberRepository memberRepository;
