@@ -1,5 +1,7 @@
 package com.ms.luvook.member.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +76,9 @@ public class MemberController {
     }
     
     @PostMapping(value="/info/img")
-    public Result uploadProfileImg(String encodeImg){
+    public Result uploadProfileImg(@RequestBody Map<String, Object> encodeImg){
     	Result result = Result.successInstance();
-    	memberService.uploadProfileImg(encodeImg);
+    	memberService.uploadProfileImg(encodeImg.get("encodeImg").toString());
     	return result;
     }
 }
