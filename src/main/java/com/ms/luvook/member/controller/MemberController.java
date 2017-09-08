@@ -76,9 +76,9 @@ public class MemberController {
     }
     
     @PostMapping(value="/info/img")
-    public Result uploadProfileImg(@RequestParam("profileImg") MultipartFile profileImg){
+    public Result uploadProfileImg(@RequestParam("file") MultipartFile file){
     	Result result = Result.successInstance();
-    	memberService.uploadProfileImg(profileImg);
+    	memberService.uploadProfileImg(file);
 
     	return result;
     }

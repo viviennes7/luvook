@@ -118,7 +118,7 @@ public class MemberServiceImpl implements MemberService{
 		String fileName = FileSystemUtils.save(profileImg, dir);
 		
 		MemberMaster member = memberRepository.findById(memberId).get();
-		member.setProfileImg("http://localhost:5000/" + dir + "/" +fileName);
+		member.setProfileImg("http://192.168.0.134:5000/" + dir + "/" +fileName);
 		memberRepository.save(member);
 	}
 }
