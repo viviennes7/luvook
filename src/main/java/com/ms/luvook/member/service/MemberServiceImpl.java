@@ -5,9 +5,9 @@ import java.util.Map;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.luvook.common.service.JwtService;
-import com.ms.luvook.common.util.Base64Utils;
 import com.ms.luvook.common.util.EntityUtils;
 import com.ms.luvook.common.util.FileSystemUtils;
 import com.ms.luvook.member.domain.MemberMaster;
@@ -111,15 +111,14 @@ public class MemberServiceImpl implements MemberService{
     }
 
 	@Override
-	public void uploadProfileImg(String encodeImg) {
+	public void uploadProfileImg(MultipartFile profileImg) {
 		Map<String, Object> memberMap = jwtService.get("member");
 		int memberId = (int) memberMap.get("memberId");
-		byte[] img = Base64Utils.decodeBase64ToBytes(encodeImg);
-		String fileName = FileSystemUtils.save(img, Integer.toString(memberId));
-		String filePath =  "/img/profile/" + memberId + "/" + fileName;
+		String dir = "img/profile/" + Integer.toString(memberId);
+		String fileName = FileSystemUtils.save(profileImg, dir);
 		
 		MemberMaster member = memberRepository.findById(memberId).get();
-		member.setProfileImg(filePath);
+		member.setProfileImg("http://localhost:5000/" + dir + "/" +fileName);
 		memberRepository.save(member);
 	}
 }
