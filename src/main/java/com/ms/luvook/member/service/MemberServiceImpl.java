@@ -1,7 +1,9 @@
 package com.ms.luvook.member.service;
 
 import java.util.Map;
+import java.util.UUID;
 
+import com.ms.luvook.common.storage.StorageService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,10 @@ public class MemberServiceImpl implements MemberService{
 
     @Autowired
     private JwtService jwtService;
-    
+
+    @Autowired
+    private StorageService awsService;
+
     public MemberMaster signup(MemberMaster memberMaster) {
         String email = memberMaster.getEmail();
         if( this.isExist(email) ){
@@ -111,14 +116,14 @@ public class MemberServiceImpl implements MemberService{
     }
 
 	@Override
-	public void uploadProfileImg(MultipartFile profileImg) {
+	public void uploadProfileImg(String encodeImg) {
 		Map<String, Object> memberMap = jwtService.get("member");
 		int memberId = (int) memberMap.get("memberId");
-		String dir = "img/profile/" + Integer.toString(memberId);
-		String fileName = FileSystemUtils.save(profileImg, dir);
-		
+		String fileName = UUID.randomUUID().toString().replaceAll("-", "")+".jpg";
+		String fileDir ="profile/" + memberId + "/";
+        awsService.uploadFile(encodeImg, fileDir, fileName);
 		MemberMaster member = memberRepository.findById(memberId).get();
-		member.setProfileImg("http://192.168.0.134:5000/" + dir + "/" +fileName);
+		member.setProfileImg("/"+fileDir +fileName);
 		memberRepository.save(member);
 	}
 }

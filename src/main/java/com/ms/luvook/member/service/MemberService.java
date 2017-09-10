@@ -23,5 +23,5 @@ public interface MemberService {
 
 	MemberMaster findByMemberId(int memberId);
 
-	void uploadProfileImg(MultipartFile profileImg);
+	void uploadProfileImg(String encodeImg);
 }

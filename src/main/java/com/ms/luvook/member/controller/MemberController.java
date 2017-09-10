@@ -17,6 +17,8 @@ import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
 
+import java.util.Map;
+
 /**
  * Created by vivie on 2017-06-08.
  */
@@ -76,10 +78,9 @@ public class MemberController {
     }
     
     @PostMapping(value="/info/img")
-    public Result uploadProfileImg(@RequestParam("file") MultipartFile file){
+    public Result uploadProfileImg(@RequestBody Map<String, Object> encodeImg){
     	Result result = Result.successInstance();
-    	memberService.uploadProfileImg(file);
-
+    	memberService.uploadProfileImg(encodeImg.get("encodeImg").toString());
     	return result;
     }
 }

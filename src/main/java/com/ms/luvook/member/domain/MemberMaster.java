@@ -38,6 +38,8 @@ import lombok.ToString;
 @Table(name = "member_master")
 public class MemberMaster {
 
+    public static final String S3_PATH = "https://s3.ap-northeast-2.amazonaws.com/kms-bucket-01";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int memberId;
@@ -78,7 +80,11 @@ public class MemberMaster {
         this.regDate = regDate;
         this.modDate = modDate;
     }
-    
+
+    public String getProfileImg(){
+        return S3_PATH + this.profileImg;
+    }
+
     public String getRegDate(){
         if(regDate == null){
             return null;

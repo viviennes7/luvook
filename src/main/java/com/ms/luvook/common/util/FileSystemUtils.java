@@ -10,8 +10,8 @@ import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 
 public class FileSystemUtils {
-//	private static final Path PATH = Paths.get("C:/Users/ylland_IT2/git/luvook/src/main/resources/static/img/profile");
-	public static final String STATIC_FILE_PATH = "C:/Users/ylland_IT2/git/luvook/src/main/resources/static/";
+//	public static final String STATIC_FILE_PATH = "C:/Users/ylland_IT2/git/luvook/src/main/resources/static/";
+	public static final String STATIC_FILE_PATH = "C:/Users/vivie/Desktop/Something/Programming/IntellijSpace/luvook/src/main/resources/static/";
 
 	public static String save(MultipartFile profileImg, String dir) {
 		String name = UUID.randomUUID().toString().replaceAll("-", "")+".jpg";
