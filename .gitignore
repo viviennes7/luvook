@@ -28,3 +28,5 @@ generated/
 authkey.properties
 /src/main/resources/config/authkey.properties
 /out/production/resources/application.properties
+/src/main/resources/application.properties
+/src/main/resources/META-INF/
