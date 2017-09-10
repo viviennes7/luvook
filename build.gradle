@@ -50,7 +50,10 @@ dependencies {
 	compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
 
-	
+	compile 'com.amazonaws:aws-android-sdk-core:2.6.0'
+	compile 'com.amazonaws:aws-android-sdk-s3:2.6.0'
+	compile 'com.amazonaws:aws-android-sdk-ddb:2.6.0'
+
 }
 
 /**** QueryDSL Class Generate Script ****/
