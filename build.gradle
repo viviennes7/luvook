@@ -56,16 +56,6 @@ dependencies {
 
 }
 
-jar{
-	manifest {
-		attributes "Title" : "luvook", "Version" : 1, "Main-Class" : "com.ms.luvook.LuvookApplication"
-	}
-	dependsOn configurations.runtime
-	from {
-		configurations.compile.collect {it.isDirectory()? it: zipTree(it)}
-	}
-}
-
 /**** QueryDSL Class Generate Script ****/
 sourceSets {
     main {
