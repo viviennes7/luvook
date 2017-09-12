@@ -1,7 +1,6 @@
 package com.ms.luvook.member.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.luvook.member.domain.MemberMaster;
 
@@ -23,5 +22,5 @@ public interface MemberService {
 
 	MemberMaster findByMemberId(int memberId);
 
-	void uploadProfileImg(String encodeImg);
+	String uploadProfileImg(String encodeImg);
 }

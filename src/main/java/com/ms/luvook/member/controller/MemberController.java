@@ -1,5 +1,7 @@
 package com.ms.luvook.member.controller;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,16 +10,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.luvook.common.domain.Result;
 import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
-
-import java.util.Map;
 
 /**
  * Created by vivie on 2017-06-08.
@@ -80,7 +78,8 @@ public class MemberController {
     @PostMapping(value="/info/img")
     public Result uploadProfileImg(@RequestBody Map<String, Object> encodeImg){
     	Result result = Result.successInstance();
-    	memberService.uploadProfileImg(encodeImg.get("encodeImg").toString());
+    	String profileImg = memberService.uploadProfileImg(encodeImg.get("encodeImg").toString());
+    	result.setData(profileImg);
     	return result;
     }
 }

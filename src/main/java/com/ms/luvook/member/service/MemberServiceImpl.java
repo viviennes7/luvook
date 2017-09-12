@@ -114,7 +114,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
 	@Override
-	public void uploadProfileImg(String encodeImg) {
+	public String uploadProfileImg(String encodeImg) {
 		Map<String, Object> memberMap = jwtService.get("member");
 		int memberId = (int) memberMap.get("memberId");
 		String fileName = UUID.randomUUID().toString().replaceAll("-", "")+".jpg";
@@ -123,5 +123,6 @@ public class MemberServiceImpl implements MemberService{
 		MemberMaster member = memberRepository.findById(memberId).get();
 		member.setProfileImg("/"+fileDir +fileName);
 		memberRepository.save(member);
+		return member.getProfileImg();
 	}
 }
