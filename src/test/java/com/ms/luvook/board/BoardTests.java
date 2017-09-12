@@ -1,11 +1,6 @@
 package com.ms.luvook.board;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
 import java.util.Date;
-import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -16,12 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ms.luvook.board.domain.Board;
-import com.ms.luvook.board.domain.BoardHeart;
 import com.ms.luvook.board.domain.BookBoard;
 import com.ms.luvook.board.repository.BoardHeartRepository;
+import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.board.service.BoardService;
-import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.service.MemberService;
@@ -41,6 +34,9 @@ public class BoardTests {
 	@Autowired
 	private BoardHeartRepository boardHeartRepository;
 	
+	@Autowired
+	private BoardRepository boardRepository;
+	
 	private BookBoard bookBoard;
 	private MemberMaster memberMaster;
 	
@@ -50,7 +46,7 @@ public class BoardTests {
 		memberMaster = new MemberMaster("%test_nickname",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
 	}
 	
-	@Test
+	/*@Test
 	public void saveAndFindTest(){
 		//When
 		int savedBookId = boardService.save(bookBoard);
@@ -98,7 +94,7 @@ public class BoardTests {
 		//Then
 		assertThat(updatedBoard.getTitle(), is(willUpdateBoard.getTitle()));
 		
-	}
+	}*/
 
 
 	//jwt추가되면서 변경...
@@ -126,11 +122,24 @@ public class BoardTests {
 		
 	}*/
 	
-	@Test
+	/*@Test
 	public void findAll(){
 		List<Board> boards = boardService.findAll(0);
 		
 		log.info("boards ::: {}", boards);
-	}
+	}*/
 	
+	
+	@Test
+	public void findAllHeartCountReceivedMember(){
+		//given
+		int memberId = 4;
+		
+		//when
+		int heartCount = boardRepository.findAllReceivedHeartCount(memberId);
+		
+		//then
+		log.info("heartCount ::: {}", heartCount);
+		
+	}
 }

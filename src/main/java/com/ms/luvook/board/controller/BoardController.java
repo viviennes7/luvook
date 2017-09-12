@@ -1,16 +1,21 @@
 package com.ms.luvook.board.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.domain.BookBoard;
 import com.ms.luvook.board.domain.MovieBoard;
 import com.ms.luvook.board.service.BoardService;
 import com.ms.luvook.common.domain.Result;
-import com.ms.luvook.common.util.HtmlUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by vivie on 2017-07-17.
@@ -79,6 +84,14 @@ public class BoardController {
     	Result result = Result.successInstance();
     	boardService.toggleHeart(boardId);
     	
+    	return result;
+    }
+    
+    @GetMapping("/member/heart/count")
+    public Result findAllReceivedHeartCount(){
+    	Result result = Result.successInstance();
+    	int heartCount = boardService.findAllReceivedHeartCount();
+    	result.setTotalCount(heartCount);
     	return result;
     }
     

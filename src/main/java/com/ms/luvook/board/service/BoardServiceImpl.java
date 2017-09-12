@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.ms.luvook.common.util.HtmlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -22,6 +21,7 @@ import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.util.EntityUtils;
+import com.ms.luvook.common.util.HtmlUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
 
@@ -210,5 +210,13 @@ public class BoardServiceImpl implements BoardService{
 		currentComment.setModDate(new Date());
 		boardCommentRepository.save(currentComment);
 		return boardCommentId;
+	}
+	
+	@Override
+	public int findAllReceivedHeartCount() {
+		Map<String, Object> memberMap = jwtService.get("member");
+		int memberId = (int) memberMap.get("memberId");
+		int heartCount = boardRepository.findAllReceivedHeartCount(memberId);
+		return heartCount;
 	}
 }

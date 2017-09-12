@@ -30,4 +30,6 @@ public interface BoardService{
 	void deleteComment(int boardCommentId);
 	
 	int updateComment(BoardComment boardComment);
+
+	int findAllReceivedHeartCount();
 }
