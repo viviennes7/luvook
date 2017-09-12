@@ -46,7 +46,7 @@ public class MemberServiceImpl implements MemberService{
         
         MemberMaster createdMember = memberRepository.save(memberMaster);
         int memberId = createdMember.getMemberId();
-        createdMember.setNickname(memberId + " 번째러버");
+        createdMember.setNickname(memberId + "번째러버");
         memberRepository.save(memberMaster);
         return createdMember;
     }
