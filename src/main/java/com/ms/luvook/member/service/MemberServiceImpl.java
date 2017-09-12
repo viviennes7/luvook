@@ -3,15 +3,13 @@ package com.ms.luvook.member.service;
 import java.util.Map;
 import java.util.UUID;
 
-import com.ms.luvook.common.storage.StorageService;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ms.luvook.common.service.JwtService;
+import com.ms.luvook.common.storage.StorageService;
 import com.ms.luvook.common.util.EntityUtils;
-import com.ms.luvook.common.util.FileSystemUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.repository.MemberRepository;
@@ -48,7 +46,7 @@ public class MemberServiceImpl implements MemberService{
         
         MemberMaster createdMember = memberRepository.save(memberMaster);
         int memberId = createdMember.getMemberId();
-        createdMember.setNickname("luVook(" + memberId + ")");
+        createdMember.setNickname(memberId + " 번째러버");
         memberRepository.save(memberMaster);
         return createdMember;
     }
