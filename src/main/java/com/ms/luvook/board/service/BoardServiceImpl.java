@@ -45,7 +45,7 @@ public class BoardServiceImpl implements BoardService{
 	private JwtService jwtService;
 	
 	@Override
-	public int save(Board board) {
+	public Board save(Board board) {
 		Map<String, Object> memberMap = jwtService.get("member");
 		int memberId = (int) memberMap.get("memberId");
 		board.setMemberId(memberId);
@@ -54,7 +54,11 @@ public class BoardServiceImpl implements BoardService{
 		String contents = board.getContents();
 		board.setContents(HtmlUtils.parseBrTag(contents));
 		Board savedBoard =  boardRepository.save(board);
-		return savedBoard.getBoardId();
+		this.setAdditionalInfo(savedBoard);
+		
+		MemberMaster writter = memberService.findByMemberId(memberId);
+		savedBoard.setMember(writter);
+		return savedBoard;
 	}
 	
 	//나중에 한번 손볼것

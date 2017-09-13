@@ -29,14 +29,17 @@ public class BoardController {
     @PostMapping("/board/book")
     public Result saveBook(BookBoard bookBoard){
         Result result = Result.successInstance();
-        int boardId = boardService.save(bookBoard);
+        Board savedBoard = boardService.save(bookBoard);
+        result.setData(savedBoard);
+        
     	return result;
     }
     
     @PostMapping("/board/movie")
     public Result saveMovie(MovieBoard movieBoard){
         Result result = Result.successInstance();
-        int boardId = boardService.save(movieBoard);
+        Board savedBoard = boardService.save(movieBoard);
+        result.setData(savedBoard);
     	return result;
     }
 

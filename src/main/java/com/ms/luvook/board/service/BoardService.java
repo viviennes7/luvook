@@ -9,7 +9,7 @@ import com.ms.luvook.board.domain.BoardComment;
  * Created by vivie on 2017-07-17.
  */
 public interface BoardService{
-	int save(Board board);
+	Board save(Board board);
 	
 	Board find(int boardId);
 	
