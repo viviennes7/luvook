@@ -1,7 +1,6 @@
 package com.ms.luvook.common.service;
 
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -61,15 +60,17 @@ public class JwtServiceImpl implements JwtService{
 			return true;
 			
 		}catch (Exception e) {
-			/*개발환경!!!
+			
 			if(log.isInfoEnabled()){
 				e.printStackTrace();
 			}else{
 				log.error(e.getMessage());
 			}
-			throw new UnauthorizedException();*/
+			throw new UnauthorizedException();
 
-			return false;
+			/*개발환경!!!
+			 * return false;*/
+			 
 		}
 	}
 	
@@ -83,17 +84,17 @@ public class JwtServiceImpl implements JwtService{
 						 .setSigningKey(SALT.getBytes("UTF-8"))
 						 .parseClaimsJws(jwt);
 		} catch (Exception e) {
-			/*개발환경!!!!
 			if(log.isInfoEnabled()){
 				e.printStackTrace();
 			}else{
 				log.error(e.getMessage());
 			}
-			throw new UnauthorizedException();*/
-
+			throw new UnauthorizedException();
+			
+			/*개발환경
 			Map<String,Object> testMap = new HashMap<>();
 			testMap.put("memberId", 2);
-			return testMap;
+			return testMap;*/
 		}
 		@SuppressWarnings("unchecked")
 		Map<String, Object> value = (LinkedHashMap<String, Object>)claims.getBody().get(key);
