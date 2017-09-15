@@ -1,5 +1,9 @@
 package com.ms.luvook.board;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 import java.util.Date;
 
 import javax.transaction.Transactional;
@@ -11,10 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.ms.luvook.board.domain.Board;
+import com.ms.luvook.board.domain.BoardHeart;
 import com.ms.luvook.board.domain.BookBoard;
 import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.board.service.BoardService;
+import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.service.MemberService;
@@ -46,11 +53,10 @@ public class BoardTests {
 		memberMaster = new MemberMaster("%test_nickname",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
 	}
 	
-	/*@Test
+	@Test
 	public void saveAndFindTest(){
 		//When
-		int savedBookId = boardService.save(bookBoard);
-		Board savedBoard = boardService.find(savedBookId);
+		Board savedBoard = boardService.save(bookBoard);
 		
 		//Then
 		assertNotNull(savedBoard.getRegDate());
@@ -62,11 +68,11 @@ public class BoardTests {
 	@Test
 	public void deleteTest(){
 		//Given
-		int savedBookId = boardService.save(bookBoard);
+		Board savedBoard = boardService.save(bookBoard);
+		int savedBoardId = savedBoard.getBoardId();
 		
 		//When
-		boardService.delete(savedBookId);
-		Board savedBoard = boardService.find(savedBookId);
+		boardService.delete(savedBoardId);
 		
 		//Then
 		assertThat(savedBoard.getIsUse(), is(IsUse.N));
@@ -94,40 +100,32 @@ public class BoardTests {
 		//Then
 		assertThat(updatedBoard.getTitle(), is(willUpdateBoard.getTitle()));
 		
-	}*/
+	}
 
 
-	//jwt추가되면서 변경...
-	/*@Test
+	@Test
 	public void toggleHeart(){
-		//Given
-		int savedBookId = boardService.save(bookBoard);
+		Board savedBookBoard = boardService.save(bookBoard); 
+		int savedBoardkId = savedBookBoard.getBoardId(); 
 		MemberMaster savedMember = memberService.signup(memberMaster);
 		int savedMemberId = savedMember.getMemberId();
 		
 		//Case1 - Heart is not exist 
-		boardService.toggleHeart(savedMemberId, savedBookId);
-		BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBookId);
+		boardService.toggleHeart(savedBoardkId);
+		BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardkId);
 		assertNotNull(boardHeart);
 		
 		//Case2 - Heart is exist and IsUse is 'Y'
-		boardService.toggleHeart(savedMemberId, savedBookId);
-		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBookId);
+		boardService.toggleHeart(savedBoardkId);
+		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardkId);
 		assertThat(boardHeart.getIsUse(), is(IsUse.N));
 		
 		//Case2 - Heart is exist and IsUse is 'N'
-		boardService.toggleHeart(savedMemberId, savedBookId);
-		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBookId);
+		boardService.toggleHeart(savedBoardkId);
+		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardkId);
 		assertThat(boardHeart.getIsUse(), is(IsUse.Y));
 		
-	}*/
-	
-	/*@Test
-	public void findAll(){
-		List<Board> boards = boardService.findAll(0);
-		
-		log.info("boards ::: {}", boards);
-	}*/
+	}
 	
 	
 	@Test

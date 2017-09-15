@@ -1,7 +1,9 @@
 package com.ms.luvook.member;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
@@ -67,7 +69,7 @@ public class SignInTest {
         assertNotNull(login);
     }
     
-    /*@Test
+    @Test
     public void signinJwt() throws Exception{
     	//Given
     	MemberMaster signedupMember = memberService.signup(memberMaster);
@@ -78,7 +80,7 @@ public class SignInTest {
 		
 		//Then
 		assertThat(signedinMember.getEmail(), is(signedupMember.getEmail()));
-    }*/
+    }
     
     @Test(expected = IllegalStateException.class)
     public void failSignin() throws Exception{

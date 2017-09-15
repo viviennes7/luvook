@@ -48,16 +48,16 @@ public class JwtTests {
 		
 	}
 	
-/*	@Test
+	@Test
 	public void getJwtTest(){
 		//Given
 		String jwt = jwtService.createMember(memberMaster);
 		
 		//When
-		Map<String, Object> memberMap = jwtService.get(jwt, "member");
+		Map<String, Object> memberMap = jwtService.get("member");
 		
 		//Then
 		assertThat(memberMap.get("email"), is("test1@naver.com"));
-	}*/
+	}
 	
 }
