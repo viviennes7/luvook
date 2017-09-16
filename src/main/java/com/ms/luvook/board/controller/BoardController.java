@@ -2,13 +2,9 @@ package com.ms.luvook.board.controller;
 
 import java.util.List;
 
+import com.ms.luvook.common.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
@@ -25,20 +21,24 @@ public class BoardController {
 
     @Autowired
     private BoardService boardService;
+
+    @Autowired
+    private JwtService jwtService;
     
     @PostMapping("/board/book")
     public Result saveBook(BookBoard bookBoard){
         Result result = Result.successInstance();
-        Board savedBoard = boardService.save(bookBoard);
+        int memberId = jwtService.getMemberId();
+        Board savedBoard = boardService.save(bookBoard, memberId);
         result.setData(savedBoard);
-        
     	return result;
     }
     
     @PostMapping("/board/movie")
     public Result saveMovie(MovieBoard movieBoard){
         Result result = Result.successInstance();
-        Board savedBoard = boardService.save(movieBoard);
+        int memberId = jwtService.getMemberId();
+        Board savedBoard = boardService.save(movieBoard, memberId);
         result.setData(savedBoard);
     	return result;
     }
@@ -46,7 +46,8 @@ public class BoardController {
     @GetMapping("/board/{boardId}")
     public Result find(@PathVariable int boardId){
     	Result result = Result.successInstance();
-    	Board board = boardService.find(boardId);
+        int memberId = jwtService.getMemberId();
+    	Board board = boardService.find(boardId, memberId);
     	result.setData(board);
         return result;
     }
@@ -54,12 +55,12 @@ public class BoardController {
     @DeleteMapping("/board/{boardId}")
     public Result delete(@PathVariable int boardId){
     	Result result = Result.successInstance();
-    	boardService.delete(boardId);
+        int memberId = jwtService.getMemberId();
+    	boardService.delete(boardId, memberId);
     	return result;
     }
 
-    //임시로 Post - > Patch
-    @PostMapping(value = "/board/book/temp")
+    @PatchMapping(value = "/board/book/{boardId}")
     public Result update(BookBoard bookBoard){
     	Result result = Result.successInstance();
     	boardService.update(bookBoard);
@@ -69,7 +70,8 @@ public class BoardController {
     @GetMapping("/boards/{pageNum}")
     public Result findAll(@PathVariable int pageNum){
     	Result result = Result.successInstance();
-    	List<Board> boards = boardService.findAll(pageNum);
+        int memberId = jwtService.getMemberId();
+    	List<Board> boards = boardService.findAll(memberId, pageNum);
     	result.setData(boards);
         return result;
     }
@@ -85,15 +87,16 @@ public class BoardController {
     @PostMapping("/board/{boardId}/heart")
     public Result toggleHeart(@PathVariable int boardId){
     	Result result = Result.successInstance();
-    	boardService.toggleHeart(boardId);
-    	
+        int memberId = jwtService.getMemberId();
+    	boardService.toggleHeart(boardId, memberId);
     	return result;
     }
     
     @GetMapping("/member/heart/count")
     public Result findAllReceivedHeartCount(){
     	Result result = Result.successInstance();
-    	int heartCount = boardService.findAllReceivedHeartCount();
+        int memberId = jwtService.getMemberId();
+    	int heartCount = boardService.findAllReceivedHeartCount(memberId);
     	result.setTotalCount(heartCount);
     	return result;
     }
@@ -101,7 +104,8 @@ public class BoardController {
     @PostMapping("/board/{boardId}/comment")
     public Result saveComment(@PathVariable  int boardId, BoardComment comment){
         Result result = Result.successInstance();
-        BoardComment savedComment = boardService.saveComment(comment);
+        int memberId = jwtService.getMemberId();
+        BoardComment savedComment = boardService.saveComment(comment, memberId);
         result.setData(savedComment);
         return result;
     }

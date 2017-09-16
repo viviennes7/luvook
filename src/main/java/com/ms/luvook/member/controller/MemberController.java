@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.luvook.common.domain.Result;
-import com.ms.luvook.common.service.JwtService;
+import com.ms.luvook.common.service.jwt.JwtService;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
 
@@ -61,7 +61,8 @@ public class MemberController {
     @PostMapping(value="/signin/jwt")
     public Result signin(){
     	Result result = Result.successInstance();
-    	MemberMaster loginMember = memberService.signinJwt();
+        int memberId = jwtService.getMemberId();
+    	MemberMaster loginMember = memberService.findByMemberId(memberId);
     	result.setData(loginMember);
     	return result;
     }
@@ -69,8 +70,8 @@ public class MemberController {
     @PutMapping(value="/info")
     public Result updateInfo(String nickname, String password){
     	Result result = Result.successInstance();
-    	memberService.updateInfo(nickname, password);
-    	
+        int memberId = jwtService.getMemberId();
+    	memberService.updateInfo(nickname, password, memberId);
     	return result;
     	
     }
@@ -78,7 +79,8 @@ public class MemberController {
     @PostMapping(value="/info/img")
     public Result uploadProfileImg(@RequestBody Map<String, Object> encodeImg){
     	Result result = Result.successInstance();
-    	String profileImg = memberService.uploadProfileImg(encodeImg.get("encodeImg").toString());
+        int memberId = jwtService.getMemberId();
+    	String profileImg = memberService.uploadProfileImg(encodeImg.get("encodeImg").toString(), memberId);
     	result.setData(profileImg);
     	return result;
     }

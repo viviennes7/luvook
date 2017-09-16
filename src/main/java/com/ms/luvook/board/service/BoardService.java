@@ -9,21 +9,21 @@ import com.ms.luvook.board.domain.BoardComment;
  * Created by vivie on 2017-07-17.
  */
 public interface BoardService{
-	Board save(Board board);
+	Board save(Board board, int memberId);
 	
-	Board find(int boardId);
+	Board find(int boardId, int memberId);
 	
-	List<Board> findAll(int pageNum);
+	List<Board> findAll(int memberId, int pageNum);
 	
-	void delete(int boardId);
+	void delete(int boardId, int memberId);
 	
 	int update(Board board);
 	
-	void toggleHeart(int boardId);
+	void toggleHeart(int boardId, int memberId);
 
 	List<Board> findAllByMember(int memberId);
 
-	BoardComment saveComment(BoardComment boardComment);
+	BoardComment saveComment(BoardComment boardComment, int memberId);
 
 	List<BoardComment> findAllComment(int boardId);
 
@@ -31,5 +31,5 @@ public interface BoardService{
 	
 	int updateComment(BoardComment boardComment);
 
-	int findAllReceivedHeartCount();
+	int findAllReceivedHeartCount(int memberId);
 }

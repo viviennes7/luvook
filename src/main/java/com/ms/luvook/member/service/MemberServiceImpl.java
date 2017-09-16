@@ -1,18 +1,16 @@
 package com.ms.luvook.member.service;
 
-import java.util.Map;
-import java.util.UUID;
-
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.storage.StorageService;
 import com.ms.luvook.common.util.EntityUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.repository.MemberRepository;
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by vivie on 2017-06-08.
@@ -24,9 +22,6 @@ public class MemberServiceImpl implements MemberService{
 	
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private JwtService jwtService;
 
     @Autowired
     private StorageService awsService;
@@ -77,18 +72,9 @@ public class MemberServiceImpl implements MemberService{
         return memberMaster;
     }
 
-	@Override
-	public MemberMaster signinJwt() {
-		Map<String, Object> memberMap = jwtService.get("member");
-		String email = memberMap.get("email").toString();
-		MemberMaster memberMaster = memberRepository.findByEmail(email);
-		return memberMaster;
-	}
 
 	@Override
-	public void updateInfo(String nickname, String password) {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int)memberMap.get("memberId");
+	public void updateInfo(String nickname, String password, int memberId) {
 		MemberMaster currentMember = memberRepository.getOne(memberId);
 		String currentNickname = currentMember.getNickname();
 		
@@ -114,9 +100,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
 	@Override
-	public String uploadProfileImg(String encodeImg) {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
+	public String uploadProfileImg(String encodeImg, int memberId) {
 		String fileName = UUID.randomUUID().toString().replaceAll("-", "")+".jpg";
 		String fileDir ="profile/" + memberId + "/";
         awsService.uploadFile(encodeImg, fileDir, fileName);

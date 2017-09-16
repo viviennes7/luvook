@@ -16,11 +16,9 @@ public interface MemberService {
 
     MemberMaster signin(String email, String password);
     
-    MemberMaster signinJwt();
-
-	void updateInfo(String nickname, String password);
+	void updateInfo(String nickname, String password, int memberId);
 
 	MemberMaster findByMemberId(int memberId);
 
-	String uploadProfileImg(String encodeImg);
+	String uploadProfileImg(String encodeImg, int memberId);
 }

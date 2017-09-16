@@ -1,16 +1,5 @@
 package com.ms.luvook.board.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.domain.BoardHeart;
@@ -19,11 +8,19 @@ import com.ms.luvook.board.repository.BoardCommentRepository;
 import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.common.domain.IsUse;
-import com.ms.luvook.common.service.JwtService;
 import com.ms.luvook.common.util.EntityUtils;
 import com.ms.luvook.common.util.HtmlUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 @Transactional
 @Component("boardService")
@@ -41,20 +38,15 @@ public class BoardServiceImpl implements BoardService{
 	@Autowired
 	private BoardCommentRepository boardCommentRepository;
 	
-	@Autowired
-	private JwtService jwtService;
-	
 	@Override
-	public Board save(Board board) {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
+	public Board save(Board board, int memberId) {
 		board.setMemberId(memberId);
 		board.setIsUse(IsUse.Y);
 		EntityUtils.initializeRegAndModDate(board);
 		String contents = board.getContents();
 		board.setContents(HtmlUtils.parseBrTag(contents));
 		Board savedBoard =  boardRepository.save(board);
-		this.setAdditionalInfo(savedBoard);
+		this.setAdditionalInfo(savedBoard, memberId);
 		
 		MemberMaster writter = memberService.findByMemberId(memberId);
 		savedBoard.setMember(writter);
@@ -77,8 +69,8 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public void delete(int boardId) {
-		Board board = this.find(boardId);
+	public void delete(int boardId, int memberId) {
+		Board board = this.find(boardId, memberId);
 		board.setIsUse(IsUse.N);
 		board.setModDate(new Date());
 		boardRepository.save(board);
@@ -86,18 +78,18 @@ public class BoardServiceImpl implements BoardService{
 
 	
 	@Override
-	public Board find(int boardId) {
+	public Board find(int boardId, int memberId) {
 		Board board = boardRepository.findById(boardId).get();
-		this.setAdditionalInfo(board);
+		this.setAdditionalInfo(board, memberId);
 		return board;
 	}
 	
 	@Override
-	public List<Board> findAll(int pageNum) {
+	public List<Board> findAll(int memberId, int pageNum) {
 		PageRequest page = PageRequest.of(pageNum, 10, new Sort(Direction.DESC, "boardId"));
 		List<Board> boards = boardRepository.findAllByIsUseOrderByBoardIdDesc(IsUse.Y,page);
 		for(Board board : boards){
-			this.setAdditionalInfo(board);
+			this.setAdditionalInfo(board, memberId);
 		}
 		
 		return boards;
@@ -107,17 +99,17 @@ public class BoardServiceImpl implements BoardService{
 	public List<Board> findAllByMember(int memberId) {
 		List<Board> boards = boardRepository.findAllByMemberIdAndIsUseOrderByBoardIdDesc(memberId, IsUse.Y);
 		for(Board board : boards){
-			this.setAdditionalInfo(board);
+			this.setAdditionalInfo(board, memberId);
 		}
 		
 		return boards;
 	}
 	
 	//TODO : 나중에 QueryDSL로 짜볼것
-	private void setAdditionalInfo(Board board){
+	private void setAdditionalInfo(Board board, int memberId){
 		this.setHeartCount(board);
 		this.setCommentCount(board);
-		this.setIsClickedHeart(board);
+		this.setIsClickedHeart(board, memberId);
 		((BookBoard)board).setBigCover();
 	}
 	
@@ -134,9 +126,7 @@ public class BoardServiceImpl implements BoardService{
 		board.setCommentCount(commentCount);
 	}
 
-	private void setIsClickedHeart(Board board){
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
+	private void setIsClickedHeart(Board board, int memberId){
 		BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardIdAndIsUse(memberId, board.getBoardId(), IsUse.Y);
 		if(boardHeart == null){
 			board.setIsClickedHeart(false);
@@ -146,9 +136,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public void toggleHeart(int boardId) {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
+	public void toggleHeart(int boardId, int memberId) {
 		BoardHeart preHeart = boardHeartRepository.findByMemberIdAndBoardId(memberId, boardId);
 		BoardHeart newOrModHeart = null;
 		if(preHeart == null){
@@ -178,9 +166,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public BoardComment saveComment(BoardComment boardComment) {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
+	public BoardComment saveComment(BoardComment boardComment, int memberId) {
 		MemberMaster member = memberService.findByMemberId(memberId);
 		boardComment.setMemberId(memberId);
 		boardComment.setIsUse(IsUse.Y);
@@ -217,9 +203,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public int findAllReceivedHeartCount() {
-		Map<String, Object> memberMap = jwtService.get("member");
-		int memberId = (int) memberMap.get("memberId");
+	public int findAllReceivedHeartCount(int memberId) {
 		int heartCount = boardRepository.findAllReceivedHeartCount(memberId);
 		return heartCount;
 	}
