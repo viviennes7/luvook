@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ms.luvook.common.service.JwtService;
+import com.ms.luvook.common.service.jwt.JwtService;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberServiceImpl;
 

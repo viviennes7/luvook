@@ -10,8 +10,8 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.ms.luvook.common.service.JwtService;
-import com.ms.luvook.common.service.JwtServiceImpl;
+import com.ms.luvook.common.service.jwt.JwtService;
+import com.ms.luvook.common.service.jwt.JwtServiceImpl;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 
