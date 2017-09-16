@@ -40,17 +40,20 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public Board save(Board board, int memberId) {
+		this.initialize(board, memberId);
+		Board savedBoard =  boardRepository.save(board);
+		this.setAdditionalInfo(savedBoard, memberId);
+		MemberMaster writer = memberService.findByMemberId(memberId);
+		savedBoard.setMember(writer);
+		return savedBoard;
+	}
+
+	private void initialize(Board board, int memberId){
 		board.setMemberId(memberId);
 		board.setIsUse(IsUse.Y);
 		EntityUtils.initializeRegAndModDate(board);
 		String contents = board.getContents();
 		board.setContents(HtmlUtils.parseBrTag(contents));
-		Board savedBoard =  boardRepository.save(board);
-		this.setAdditionalInfo(savedBoard, memberId);
-		
-		MemberMaster writter = memberService.findByMemberId(memberId);
-		savedBoard.setMember(writter);
-		return savedBoard;
 	}
 	
 	//나중에 한번 손볼것
@@ -105,7 +108,6 @@ public class BoardServiceImpl implements BoardService{
 		return boards;
 	}
 	
-	//TODO : 나중에 QueryDSL로 짜볼것
 	private void setAdditionalInfo(Board board, int memberId){
 		this.setHeartCount(board);
 		this.setCommentCount(board);
@@ -157,7 +159,7 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	private BoardHeart modifyHeart(BoardHeart preHeart){
-		BoardHeart modHeart = new BoardHeart();
+		BoardHeart modHeart = null;
 		IsUse inverseIsUse = preHeart.getIsUse().inverse();
 		modHeart = preHeart;
 		modHeart.setIsUse(inverseIsUse);
@@ -168,14 +170,18 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public BoardComment saveComment(BoardComment boardComment, int memberId) {
 		MemberMaster member = memberService.findByMemberId(memberId);
-		boardComment.setMemberId(memberId);
-		boardComment.setIsUse(IsUse.Y);
-		EntityUtils.initializeRegAndModDate(boardComment);
-        String contents = boardComment.getContents();
-        boardComment.setContents(HtmlUtils.parseBrTag(contents));
+		this.initializeComment(boardComment, memberId);
 		BoardComment savedComment = boardCommentRepository.save(boardComment);
 		savedComment.setMember(member);
 		return savedComment;
+	}
+
+	private void initializeComment(BoardComment boardComment, int memberId){
+		boardComment.setMemberId(memberId);
+		boardComment.setIsUse(IsUse.Y);
+		EntityUtils.initializeRegAndModDate(boardComment);
+		String contents = boardComment.getContents();
+		boardComment.setContents(HtmlUtils.parseBrTag(contents));
 	}
 
 	@Override
