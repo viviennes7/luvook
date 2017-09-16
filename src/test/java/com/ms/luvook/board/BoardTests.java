@@ -103,29 +103,7 @@ public class BoardTests {
 	}
 
 
-	@Test
-	public void toggleHeart(){
-		Board savedBookBoard = boardService.save(bookBoard); 
-		int savedBoardkId = savedBookBoard.getBoardId(); 
-		MemberMaster savedMember = memberService.signup(memberMaster);
-		int savedMemberId = savedMember.getMemberId();
-		
-		//Case1 - Heart is not exist 
-		boardService.toggleHeart(savedBoardkId);
-		BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardkId);
-		assertNotNull(boardHeart);
-		
-		//Case2 - Heart is exist and IsUse is 'Y'
-		boardService.toggleHeart(savedBoardkId);
-		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardkId);
-		assertThat(boardHeart.getIsUse(), is(IsUse.N));
-		
-		//Case2 - Heart is exist and IsUse is 'N'
-		boardService.toggleHeart(savedBoardkId);
-		boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardkId);
-		assertThat(boardHeart.getIsUse(), is(IsUse.Y));
-		
-	}
+
 	
 	
 	@Test
