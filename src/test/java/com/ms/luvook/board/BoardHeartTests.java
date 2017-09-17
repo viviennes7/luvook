@@ -40,26 +40,26 @@ public class BoardHeartTests {
     @Autowired
     private BoardHeartRepository boardHeartRepository;
 
-    private Board savedBoard;
-    private int savedBoardId;
     private MemberMaster savedMember;
     private int savedMemberId;
+    private Board savedBoard;
+    private int savedBoardId;
 
     @Before
     public void setup(){
-        BookBoard bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", "11111", "2222222");
-        MemberMaster memberMaster = new MemberMaster("%test_nickname",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
-        savedBoard = boardService.save(bookBoard);
-        savedBoardId = savedBoard.getBoardId();
+        MemberMaster memberMaster = new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
         savedMember = memberService.signup(memberMaster);
         savedMemberId = savedMember.getMemberId();
+        BookBoard bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", "11111", "2222222");
+        savedBoard = boardService.save(bookBoard, savedMemberId);
+        savedBoardId = savedBoard.getBoardId();
     }
 
 
     @Test
     public void insertHeart(){
         //when
-        boardService.toggleHeart(savedBoardId);
+        boardService.toggleHeart(savedBoardId, savedMemberId);
         BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardId);
 
         //then
@@ -70,10 +70,10 @@ public class BoardHeartTests {
     @Test
     public void updateHeartToIsUseN(){
         //given
-        boardService.toggleHeart(savedBoardId);
+        boardService.toggleHeart(savedBoardId, savedMemberId);
 
         //when
-        boardService.toggleHeart(savedBoardId);
+        boardService.toggleHeart(savedBoardId, savedMemberId);
         BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardId);
 
         //then
@@ -83,11 +83,11 @@ public class BoardHeartTests {
     @Test
     public void updateHeartToIsUseY(){
         //given
-        boardService.toggleHeart(savedBoardId);
-        boardService.toggleHeart(savedBoardId);
+        boardService.toggleHeart(savedBoardId, savedMemberId);
+        boardService.toggleHeart(savedBoardId, savedMemberId);
 
         //when
-        boardService.toggleHeart(savedBoardId);
+        boardService.toggleHeart(savedBoardId, savedMemberId);
         BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardId);
 
         //then

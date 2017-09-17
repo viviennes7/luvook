@@ -6,6 +6,9 @@ import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.domain.MemberType;
+import com.ms.luvook.member.repository.MemberRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +23,8 @@ import com.ms.luvook.common.domain.IsUse;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
+
 @Slf4j
 @Transactional
 @RunWith(SpringRunner.class)
@@ -28,20 +33,27 @@ public class BoardCommentTests {
 	
 	@Autowired
 	private BoardService boardService;
+
 	@Autowired
-	private BoardCommentRepository boardCommentRepository;
-	
+	private MemberRepository memberRepository;
+
+	private MemberMaster memberMaster;
+	private int memberId;
 	private BoardComment boardComment;
-	
+
+
 	@Before
 	public void setup(){
+		memberMaster = new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
+		memberMaster = memberRepository.save(memberMaster);
+		memberId = memberMaster.getMemberId();
 		boardComment = new BoardComment(0, 1, null,1, "댓글테스트", null, null, null);
 	}
 	
 	@Test
 	public void saveAndFind(){
 		//When
-		BoardComment savedComment = boardService.saveComment(boardComment);
+		BoardComment savedComment = boardService.saveComment(boardComment, memberId);
 		
 		//Then
 		assertNotNull(savedComment.getModDate());
@@ -53,7 +65,7 @@ public class BoardCommentTests {
 	@Test
 	public void delete(){
 		//Given
-		BoardComment savedComment = boardService.saveComment(boardComment);
+		BoardComment savedComment = boardService.saveComment(boardComment, memberId);
 		int savedCommentId = savedComment.getBoardCommentId();
 		
 		//When

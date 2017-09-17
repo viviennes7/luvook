@@ -8,6 +8,7 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import com.ms.luvook.member.repository.MemberRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,27 +37,29 @@ public class BoardTests {
 	
 	@Autowired
 	private BoardService boardService;
+
 	@Autowired
-	private MemberService memberService;
-	@Autowired
-	private BoardHeartRepository boardHeartRepository;
-	
+	private MemberRepository memberRepository;
+
 	@Autowired
 	private BoardRepository boardRepository;
 	
 	private BookBoard bookBoard;
 	private MemberMaster memberMaster;
-	
+	private int memberId;
+
 	@Before
 	public void setup(){
 		bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", "11111", "2222222"); 
-		memberMaster = new MemberMaster("%test_nickname",  "test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
+		memberMaster = new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
+		memberMaster = memberRepository.save(memberMaster);
+		memberId = memberMaster.getMemberId();
 	}
 	
 	@Test
 	public void saveAndFindTest(){
 		//When
-		Board savedBoard = boardService.save(bookBoard);
+		Board savedBoard = boardService.save(bookBoard, memberId);
 		
 		//Then
 		assertNotNull(savedBoard.getRegDate());
@@ -68,11 +71,11 @@ public class BoardTests {
 	@Test
 	public void deleteTest(){
 		//Given
-		Board savedBoard = boardService.save(bookBoard);
+		Board savedBoard = boardService.save(bookBoard, memberId);
 		int savedBoardId = savedBoard.getBoardId();
 		
 		//When
-		boardService.delete(savedBoardId);
+		boardService.delete(savedBoardId, memberId);
 		
 		//Then
 		assertThat(savedBoard.getIsUse(), is(IsUse.N));
@@ -89,11 +92,11 @@ public class BoardTests {
 		
 		BookBoard willUpdateBoard = bookBoard;
 		willUpdateBoard.setTitle("변경된 책제목");
-		boardService.save(bookBoard);
+		boardService.save(bookBoard, memberId);
 		
 		//When
 		int updatedBoardId = boardService.update(willUpdateBoard);
-		BookBoard updatedBoard = (BookBoard)boardService.find(updatedBoardId);
+		BookBoard updatedBoard = (BookBoard)boardService.find(updatedBoardId, memberId);
 		log.info("   bookBoard ::: {}", bookBoard);
 		log.info("updatedBoard ::: {}", updatedBoard);
 		
@@ -102,10 +105,6 @@ public class BoardTests {
 		
 	}
 
-
-
-	
-	
 	@Test
 	public void findAllHeartCountReceivedMember(){
 		//given
