@@ -71,15 +71,6 @@ public class SignInTest {
     
     @Test
     public void signinJwt() throws Exception{
-    	//Given
-    	MemberMaster signedupMember = memberService.signup(memberMaster);
-		String jwt = jwtService.createMember(signedupMember);
-		
-		//When
-		MemberMaster signedinMember = memberService.signinJwt();
-		
-		//Then
-		assertThat(signedinMember.getEmail(), is(signedupMember.getEmail()));
     }
     
     @Test(expected = IllegalStateException.class)
