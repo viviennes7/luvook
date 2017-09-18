@@ -19,6 +19,7 @@ import com.ms.luvook.member.repository.MemberRepository;
 @Service("memberService")
 public class MemberServiceImpl implements MemberService{
 	
+	private static final String DEFAULT_NICKNAME = "번째러버";
 	private static final String PROFILE_DEFAULT_PATH = "/profile/0/profile_default.jpg";
 	private static final String SIGNIN_EXCEPTION_MSG = "로그인정보가 일치하지 않습니다.";
 	private static final String EMAIL_EXIST_EXCEPTION_MSG = "이미 계정이 존재합니다.";
@@ -35,8 +36,9 @@ public class MemberServiceImpl implements MemberService{
 		this.validate(email);
 		this.setupForSave(memberMaster);
 		MemberMaster createdMember = memberRepository.save(memberMaster);
+		
 		int memberId = createdMember.getMemberId();
-		createdMember.setNickname(memberId + "번째러버");
+		createdMember.setNickname(memberId + DEFAULT_NICKNAME);
 		memberRepository.save(memberMaster);
 		return createdMember;
 	}
@@ -45,6 +47,7 @@ public class MemberServiceImpl implements MemberService{
 		String password = memberMaster.getPassword();
 		String encodedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 		memberMaster.setPassword(encodedPassword);
+		
 		memberMaster.setMemberType(MemberType.USER);
 		memberMaster.setProfileImg(PROFILE_DEFAULT_PATH);
 		EntityUtils.initializeRegAndModDate(memberMaster);
@@ -86,22 +89,26 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public void updateInfo(String nickname, String password, int memberId) {
 		MemberMaster currentMember = memberRepository.getOne(memberId);
-		String currentNickname = currentMember.getNickname();
-		
+		this.updateNickname(currentMember, nickname);
+		this.updatePassword(currentMember, password);
+		memberRepository.save(currentMember);
+	}
+	
+	private void updateNickname(MemberMaster memberMaster, String nickname){
+		String currentNickname = memberMaster.getNickname();
 		MemberMaster searchedMember = memberRepository.findByNickname(nickname);
-		
 		if(currentNickname.equals(nickname) || searchedMember == null ){
-			currentMember.setNickname(nickname);
+			memberMaster.setNickname(nickname);
 		}else{
 			throw new IllegalStateException(NICKNAME_EXIST_EXCEPTION_MSG);
 		}
-		
+	}
+	
+	private void updatePassword(MemberMaster memberMaster, String password){
 		if(!password.equals("")){
 			String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
-			currentMember.setPassword(encodePassword);
+			memberMaster.setPassword(encodePassword);
 		}
-		
-		memberRepository.save(currentMember);
 	}
 
 	@Override
