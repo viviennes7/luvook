@@ -1,7 +1,9 @@
 package com.ms.luvook.member;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
@@ -30,7 +32,7 @@ public class MemberTests {
     
     @Before
     public void setup(){
-    	memberMaster =new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", null, null, null, null);
+    	memberMaster = new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", null, null, null, null);
     }
     
     @Test
@@ -47,6 +49,33 @@ public class MemberTests {
     	//When, Then
         memberService.signup(memberMaster);
         memberService.signup(memberMaster);
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void isExistEmail(){
+    	//Given
+    	memberService.signup(memberMaster);
+    	String email = memberMaster.getEmail();
+    	
+    	//When
+    	boolean isExist = memberService.isExist(email);
+    	
+    	//Then
+    	assertThat(isExist, is(true));
+    	memberService.validate(email);
+    }
+    
+    @Test
+    public void isNotExistEmail(){
+    	//Given
+    	String email = "random@email.com";
+    	
+    	//When
+    	boolean isExist = memberService.isExist(email);
+    	
+    	//Then
+    	assertThat(isExist, is(false));
+    	memberService.validate(email);
     }
 
     @Test
@@ -83,5 +112,51 @@ public class MemberTests {
         
         //When, Then
         memberService.signin(email, password);
+    }
+    
+    @Test
+    public void updateNickname(){
+    	//Given
+    	MemberMaster signedMember = memberService.signup(memberMaster);
+    	String anotherNickname = "$TestNickname$";
+    	String password = "";
+    	int memberId = signedMember.getMemberId();
+    	
+    	//When
+    	memberService.updateInfo(anotherNickname, password, memberId);
+    	MemberMaster updatedMember = memberService.findByMemberId(memberId);
+    	
+    	//Then
+    	assertThat(anotherNickname, is(updatedMember.getNickname()));
+    }
+    
+    @Test(expected = IllegalStateException.class)
+    public void updateAlreadyExistNickname(){
+    	//Given
+    	MemberMaster previousMember = new MemberMaster("%pre_test_nickname",  "%test1@naver.com", "123123", null, null, null, null);
+    	memberService.signup(previousMember);
+    	MemberMaster signedMember = memberService.signup(memberMaster);
+    	String password = "";
+    	int memberId = signedMember.getMemberId();
+    	
+    	//When, Then
+    	memberService.updateInfo(previousMember.getNickname(), password, memberId);
+    	MemberMaster updatedMember = memberService.findByMemberId(memberId);
+    }
+    
+    @Test
+    public void updatePassword(){
+    	//Given
+    	MemberMaster signedMember = memberService.signup(memberMaster);
+    	String email = signedMember.getEmail();
+    	String nickname = signedMember.getNickname();
+    	String changePassword = "change";
+    	int memberId = signedMember.getMemberId();
+    	
+    	//When
+    	memberService.updateInfo(nickname, changePassword, memberId);
+    	
+    	//Then
+    	memberService.signin(email, changePassword);
     }
 }
