@@ -1,9 +1,7 @@
 package com.ms.luvook.member;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import javax.transaction.Transactional;
 
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.ms.luvook.common.service.jwt.JwtService;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberServiceImpl;
 
@@ -24,19 +21,16 @@ import com.ms.luvook.member.service.MemberServiceImpl;
 @Transactional
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SignInTest {
+public class MemberTests {
 
     @Autowired
     private MemberServiceImpl memberService;
-    
-    @Autowired
-    private JwtService jwtService;
     
     private MemberMaster memberMaster;
     
     @Before
     public void setup(){
-    	memberMaster =new MemberMaster("test_nickname",  "test1@naver.com", "123123", null, null, null, null);
+    	memberMaster =new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", null, null, null, null);
     }
     
     @Test
@@ -58,8 +52,8 @@ public class SignInTest {
     @Test
     public void signin() throws Exception{
     	//Given
-        String email = "test1@naver.com";
-        String password = "123123";
+        String email = memberMaster.getEmail();
+        String password = memberMaster.getPassword();
         
         //When
         memberService.signup(memberMaster);
@@ -69,15 +63,23 @@ public class SignInTest {
         assertNotNull(login);
     }
     
-    @Test
-    public void signinJwt() throws Exception{
+    @Test(expected = NullPointerException.class)
+    public void signinWrongEmail() throws Exception{
+    	//Given
+    	memberService.signup(memberMaster);
+        String email = "%wrongEmail@naver.com";
+        String password = memberMaster.getPassword();
+        
+        //When, Then
+        memberService.signin(email, password);
     }
     
     @Test(expected = IllegalStateException.class)
-    public void failSignin() throws Exception{
+    public void signinWrongPassword(){
     	//Given
-        String email = "testtesttest123@naver.com";
-        String password = "123123";
+    	memberService.signup(memberMaster);
+        String email = memberMaster.getEmail();
+        String password = "wrongPassword";
         
         //When, Then
         memberService.signin(email, password);
