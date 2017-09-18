@@ -1,5 +1,15 @@
 package com.ms.luvook.board.service;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardComment;
 import com.ms.luvook.board.domain.BoardHeart;
@@ -12,15 +22,6 @@ import com.ms.luvook.common.util.EntityUtils;
 import com.ms.luvook.common.util.HtmlUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.service.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
-import java.util.List;
 
 @Transactional
 @Component("boardService")
@@ -40,7 +41,7 @@ public class BoardServiceImpl implements BoardService{
 	
 	@Override
 	public Board save(Board board, int memberId) {
-		this.initialize(board, memberId);
+		this.setupForSave(board, memberId);
 		Board savedBoard =  boardRepository.save(board);
 		this.setAdditionalInfo(savedBoard, memberId);
 		MemberMaster writer = memberService.findByMemberId(memberId);
@@ -48,7 +49,7 @@ public class BoardServiceImpl implements BoardService{
 		return savedBoard;
 	}
 
-	private void initialize(Board board, int memberId){
+	private void setupForSave(Board board, int memberId){
 		board.setMemberId(memberId);
 		board.setIsUse(IsUse.Y);
 		EntityUtils.initializeRegAndModDate(board);
@@ -170,13 +171,13 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public BoardComment saveComment(BoardComment boardComment, int memberId) {
 		MemberMaster member = memberService.findByMemberId(memberId);
-		this.initializeComment(boardComment, memberId);
+		this.setupCommentForSave(boardComment, memberId);
 		BoardComment savedComment = boardCommentRepository.save(boardComment);
 		savedComment.setMember(member);
 		return savedComment;
 	}
 
-	private void initializeComment(BoardComment boardComment, int memberId){
+	private void setupCommentForSave(BoardComment boardComment, int memberId){
 		boardComment.setMemberId(memberId);
 		boardComment.setIsUse(IsUse.Y);
 		EntityUtils.initializeRegAndModDate(boardComment);
