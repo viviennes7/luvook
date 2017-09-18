@@ -63,6 +63,7 @@ public class MemberServiceImpl implements MemberService{
 		return isExist;
 	}
 	
+	@Override
 	public void validate(String email){
 		if( this.isExist(email) ){
 			throw new IllegalStateException(EMAIL_EXIST_EXCEPTION_MSG);
@@ -121,6 +122,7 @@ public class MemberServiceImpl implements MemberService{
 		String fileName = this.getRandomImageName();
 		String fileDir ="profile/" + memberId + "/";
 		awsService.uploadFile(encodeImg, fileDir, fileName);
+		
 		MemberMaster member = memberRepository.findById(memberId).get();
 		member.setProfileImg("/"+fileDir +fileName);
 		memberRepository.save(member);
