@@ -8,7 +8,6 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
-import com.ms.luvook.member.repository.MemberRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,15 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ms.luvook.board.domain.Board;
-import com.ms.luvook.board.domain.BoardHeart;
 import com.ms.luvook.board.domain.BookBoard;
-import com.ms.luvook.board.repository.BoardHeartRepository;
 import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.board.service.BoardService;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
-import com.ms.luvook.member.service.MemberService;
+import com.ms.luvook.member.repository.MemberRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,10 +59,7 @@ public class BoardTests {
 		Board savedBoard = boardService.save(bookBoard, memberId);
 		
 		//Then
-		assertNotNull(savedBoard.getRegDate());
-		assertNotNull(savedBoard.getModDate());
-		assertThat(savedBoard.getIsUse(), is(IsUse.Y));
-		assertThat(savedBoard.getContents(), is(bookBoard.getContents()));
+		assertNotNull(savedBoard);
 	}
 	
 	@Test
@@ -82,13 +76,11 @@ public class BoardTests {
 	}
 
 	
-	//나중에 한번 손볼것
 	@Test
 	public void updateTest(){
 		//Given
 		bookBoard.setMemberId(0);
 		bookBoard.setRegDate(null);
-		log.info("   bookBoard ::: {}", bookBoard);
 		
 		BookBoard willUpdateBoard = bookBoard;
 		willUpdateBoard.setTitle("변경된 책제목");
@@ -97,8 +89,6 @@ public class BoardTests {
 		//When
 		int updatedBoardId = boardService.update(willUpdateBoard);
 		BookBoard updatedBoard = (BookBoard)boardService.find(updatedBoardId, memberId);
-		log.info("   bookBoard ::: {}", bookBoard);
-		log.info("updatedBoard ::: {}", updatedBoard);
 		
 		//Then
 		assertThat(updatedBoard.getTitle(), is(willUpdateBoard.getTitle()));
