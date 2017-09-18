@@ -24,64 +24,64 @@ public class MemberServiceImpl implements MemberService{
 	private static final String EMAIL_EXIST_EXCEPTION_MSG = "이미 계정이 존재합니다.";
 	private static final String NICKNAME_EXIST_EXCEPTION_MSG = "이미 닉네임이 존재합니다.";
 	
-    @Autowired
-    private MemberRepository memberRepository;
+	@Autowired
+	private MemberRepository memberRepository;
+	
+	@Autowired
+	private StorageService awsService;
 
-    @Autowired
-    private StorageService awsService;
+	public MemberMaster signup(MemberMaster memberMaster) {
+		String email = memberMaster.getEmail();
+		this.validate(email);
+		this.setupForSave(memberMaster);
+		MemberMaster createdMember = memberRepository.save(memberMaster);
+		int memberId = createdMember.getMemberId();
+		createdMember.setNickname(memberId + "번째러버");
+		memberRepository.save(memberMaster);
+		return createdMember;
+	}
 
-    public MemberMaster signup(MemberMaster memberMaster) {
-        String email = memberMaster.getEmail();
-        this.validate(email);
-        this.setupForSave(memberMaster);
-        MemberMaster createdMember = memberRepository.save(memberMaster);
-        int memberId = createdMember.getMemberId();
-        createdMember.setNickname(memberId + "번째러버");
-        memberRepository.save(memberMaster);
-        return createdMember;
-    }
-    
-    private void setupForSave(MemberMaster memberMaster){
-    	String password = memberMaster.getPassword();
-        String encodedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        memberMaster.setPassword(encodedPassword);
-    	memberMaster.setMemberType(MemberType.USER);
-        memberMaster.setProfileImg(PROFILE_DEFAULT_PATH);
-        EntityUtils.initializeRegAndModDate(memberMaster);
-    }
-    
-    @Override
-    public boolean isExist(String email) {
-        boolean isExist = false;
-        MemberMaster member = memberRepository.findByEmail(email);
-        if(member != null){
-            isExist = true;
-        }
-        return isExist;
-    }
-    
-    public void validate(String email){
-    	if( this.isExist(email) ){
-            throw new IllegalStateException(EMAIL_EXIST_EXCEPTION_MSG);
-        }
-    }
+	private void setupForSave(MemberMaster memberMaster){
+		String password = memberMaster.getPassword();
+		String encodedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+		memberMaster.setPassword(encodedPassword);
+		memberMaster.setMemberType(MemberType.USER);
+		memberMaster.setProfileImg(PROFILE_DEFAULT_PATH);
+		EntityUtils.initializeRegAndModDate(memberMaster);
+	}
 
-    @Override
-    public MemberMaster signin(String email, String password) {
-        MemberMaster memberMaster = memberRepository.findByEmail(email);
-        Objects.requireNonNull(memberMaster, SIGNIN_EXCEPTION_MSG);
-        
-        if( ! this.isAccordPassword(memberMaster, password)){
-            throw new IllegalStateException(SIGNIN_EXCEPTION_MSG);
-        }
-        
-        return memberMaster;
-    }
+	@Override
+	public boolean isExist(String email) {
+		boolean isExist = false;
+		MemberMaster member = memberRepository.findByEmail(email);
+		if(member != null){
+		    isExist = true;
+		}
+		return isExist;
+	}
+	
+	public void validate(String email){
+		if( this.isExist(email) ){
+			throw new IllegalStateException(EMAIL_EXIST_EXCEPTION_MSG);
+		}
+	}
 
-    private boolean isAccordPassword(MemberMaster memberMaster, String password){
-    	String encodedPassword = memberMaster.getPassword();
-        return BCrypt.checkpw(password, encodedPassword);
-    }
+	@Override
+	public MemberMaster signin(String email, String password) {
+		MemberMaster memberMaster = memberRepository.findByEmail(email);
+		Objects.requireNonNull(memberMaster, SIGNIN_EXCEPTION_MSG);
+		
+		if( ! this.isAccordPassword(memberMaster, password)){
+			throw new IllegalStateException(SIGNIN_EXCEPTION_MSG);
+		}
+		
+		return memberMaster;
+	}
+
+	private boolean isAccordPassword(MemberMaster memberMaster, String password){
+		String encodedPassword = memberMaster.getPassword();
+		return BCrypt.checkpw(password, encodedPassword);
+	}
 
 	@Override
 	public void updateInfo(String nickname, String password, int memberId) {
@@ -104,16 +104,16 @@ public class MemberServiceImpl implements MemberService{
 		memberRepository.save(currentMember);
 	}
 
-    @Override
-    public MemberMaster findByMemberId(int memberId) {
-        return memberRepository.findById(memberId).get();
-    }
+	@Override
+	public MemberMaster findByMemberId(int memberId) {
+		return memberRepository.findById(memberId).get();
+	}
 
 	@Override
 	public String uploadProfileImg(String encodeImg, int memberId) {
 		String fileName = this.getRandomImageName();
 		String fileDir ="profile/" + memberId + "/";
-        awsService.uploadFile(encodeImg, fileDir, fileName);
+		awsService.uploadFile(encodeImg, fileDir, fileName);
 		MemberMaster member = memberRepository.findById(memberId).get();
 		member.setProfileImg("/"+fileDir +fileName);
 		memberRepository.save(member);
