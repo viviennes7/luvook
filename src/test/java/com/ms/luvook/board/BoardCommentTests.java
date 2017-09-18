@@ -4,11 +4,10 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.Date;
+
 import javax.transaction.Transactional;
 
-import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.domain.MemberType;
-import com.ms.luvook.member.repository.MemberRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,13 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.ms.luvook.board.domain.BoardComment;
-import com.ms.luvook.board.repository.BoardCommentRepository;
 import com.ms.luvook.board.service.BoardService;
 import com.ms.luvook.common.domain.IsUse;
+import com.ms.luvook.member.domain.MemberMaster;
+import com.ms.luvook.member.domain.MemberType;
+import com.ms.luvook.member.repository.MemberRepository;
 
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Date;
 
 @Slf4j
 @Transactional
@@ -56,10 +55,7 @@ public class BoardCommentTests {
 		BoardComment savedComment = boardService.saveComment(boardComment, memberId);
 		
 		//Then
-		assertNotNull(savedComment.getModDate());
-		assertNotNull(savedComment.getRegDate());
-		assertThat(savedComment.getIsUse(), is(IsUse.Y));
-		assertThat(boardComment.getContents(), is(savedComment.getContents()));
+		assertNotNull(savedComment);
 	}
 	
 	@Test
