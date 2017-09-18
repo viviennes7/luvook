@@ -1,16 +1,17 @@
 package com.ms.luvook.member.service;
 
+import java.util.Objects;
+import java.util.UUID;
+
+import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.ms.luvook.common.storage.StorageService;
 import com.ms.luvook.common.util.EntityUtils;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.repository.MemberRepository;
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by vivie on 2017-06-08.
@@ -19,6 +20,9 @@ import java.util.UUID;
 public class MemberServiceImpl implements MemberService{
 	
 	private static final String PROFILE_DEFAULT_PATH = "/profile/0/profile_default.jpg";
+	private static final String SIGNIN_EXCEPTION_MSG = "로그인정보가 일치하지 않습니다.";
+	private static final String EMAIL_EXIST_EXCEPTION_MSG = "이미 계정이 존재합니다.";
+	private static final String NICKNAME_EXIST_EXCEPTION_MSG = "이미 닉네임이 존재합니다.";
 	
     @Autowired
     private MemberRepository memberRepository;
@@ -28,17 +32,8 @@ public class MemberServiceImpl implements MemberService{
 
     public MemberMaster signup(MemberMaster memberMaster) {
         String email = memberMaster.getEmail();
-        if( this.isExist(email) ){
-            throw new IllegalStateException("이미 계정이 존재합니다.");
-        }
-        
-        String password = memberMaster.getPassword();
-        String encodePassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        memberMaster.setPassword(encodePassword);
-        memberMaster.setMemberType(MemberType.USER);
-        memberMaster.setProfileImg(PROFILE_DEFAULT_PATH);
-        EntityUtils.initializeRegAndModDate(memberMaster);
-        
+        this.validate(email);
+        this.setupForSave(memberMaster);
         MemberMaster createdMember = memberRepository.save(memberMaster);
         int memberId = createdMember.getMemberId();
         createdMember.setNickname(memberId + "번째러버");
@@ -46,6 +41,16 @@ public class MemberServiceImpl implements MemberService{
         return createdMember;
     }
     
+    private void setupForSave(MemberMaster memberMaster){
+    	String password = memberMaster.getPassword();
+        String encodedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        memberMaster.setPassword(encodedPassword);
+    	memberMaster.setMemberType(MemberType.USER);
+        memberMaster.setProfileImg(PROFILE_DEFAULT_PATH);
+        EntityUtils.initializeRegAndModDate(memberMaster);
+    }
+    
+    @Override
     public boolean isExist(String email) {
         boolean isExist = false;
         MemberMaster member = memberRepository.findByEmail(email);
@@ -54,24 +59,29 @@ public class MemberServiceImpl implements MemberService{
         }
         return isExist;
     }
+    
+    public void validate(String email){
+    	if( this.isExist(email) ){
+            throw new IllegalStateException(EMAIL_EXIST_EXCEPTION_MSG);
+        }
+    }
 
     @Override
     public MemberMaster signin(String email, String password) {
         MemberMaster memberMaster = memberRepository.findByEmail(email);
-        String encodePassword = null;
-        boolean isAccordPassword = false;
-    
-        if(memberMaster != null){
-            encodePassword = memberMaster.getPassword();
-            isAccordPassword = BCrypt.checkpw(password, encodePassword);
+        Objects.requireNonNull(memberMaster, SIGNIN_EXCEPTION_MSG);
+        
+        if( ! this.isAccordPassword(memberMaster, password)){
+            throw new IllegalStateException(SIGNIN_EXCEPTION_MSG);
         }
-
-        if(memberMaster == null || !isAccordPassword){
-            throw new IllegalStateException("로그인정보가 일치하지 않습니다.");
-        }
+        
         return memberMaster;
     }
 
+    private boolean isAccordPassword(MemberMaster memberMaster, String password){
+    	String encodedPassword = memberMaster.getPassword();
+        return BCrypt.checkpw(password, encodedPassword);
+    }
 
 	@Override
 	public void updateInfo(String nickname, String password, int memberId) {
@@ -83,7 +93,7 @@ public class MemberServiceImpl implements MemberService{
 		if(currentNickname.equals(nickname) || searchedMember == null ){
 			currentMember.setNickname(nickname);
 		}else{
-			throw new IllegalStateException("이미 닉네임이 존재합니다.");
+			throw new IllegalStateException(NICKNAME_EXIST_EXCEPTION_MSG);
 		}
 		
 		if(!password.equals("")){
@@ -101,12 +111,16 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public String uploadProfileImg(String encodeImg, int memberId) {
-		String fileName = UUID.randomUUID().toString().replaceAll("-", "")+".jpg";
+		String fileName = this.getRandomImageName();
 		String fileDir ="profile/" + memberId + "/";
         awsService.uploadFile(encodeImg, fileDir, fileName);
 		MemberMaster member = memberRepository.findById(memberId).get();
 		member.setProfileImg("/"+fileDir +fileName);
 		memberRepository.save(member);
 		return member.getProfileImg();
+	}
+	
+	private String getRandomImageName(){
+		return UUID.randomUUID().toString().replaceAll("-", "")+".jpg";
 	}
 }

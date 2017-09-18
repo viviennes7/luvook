@@ -13,6 +13,8 @@ public interface MemberService {
     MemberMaster signup(MemberMaster memberMaster);
 
     boolean isExist(String email);
+    
+    void validate(String email);
 
     MemberMaster signin(String email, String password);
     
