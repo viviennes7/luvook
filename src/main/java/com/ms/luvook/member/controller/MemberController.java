@@ -40,11 +40,8 @@ public class MemberController {
 
     @GetMapping("/validate")
     public Result validate(String email){
-        boolean alreadyExist = memberService.isExist(email);
+        memberService.validate(email);
         Result result = Result.successInstance();
-        if(alreadyExist == true){
-            result.fail().setMessage("E-mail이 이미 존재합니다.");
-        }
         return result;
     }
 
