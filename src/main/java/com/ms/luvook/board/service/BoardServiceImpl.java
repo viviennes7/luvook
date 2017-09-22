@@ -57,7 +57,6 @@ public class BoardServiceImpl implements BoardService{
 		board.setContents(HtmlUtils.parseBrTag(contents));
 	}
 	
-	//나중에 한번 손볼것
 	@Override
 	public int update(Board board) {
 		Board currentBoard = boardRepository.getOne(board.getBoardId());
@@ -115,7 +114,6 @@ public class BoardServiceImpl implements BoardService{
 		this.setIsClickedHeart(board, memberId);
 		((BookBoard)board).setBigCover();
 	}
-	
 	
 	private void setHeartCount(Board board){
 		int boardId = board.getBoardId();
@@ -189,7 +187,6 @@ public class BoardServiceImpl implements BoardService{
 	public List<BoardComment> findAllComment(int boardId) {
 		return boardCommentRepository.findByBoardIdAndIsUseOrderByBoardCommentId(boardId, IsUse.Y);
 	}
-
 
 	@Override
 	public void deleteComment(int boardCommentId) {
