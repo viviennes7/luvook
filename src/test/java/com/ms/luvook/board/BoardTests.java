@@ -4,8 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.Date;
-
 import javax.transaction.Transactional;
 
 import org.junit.Before;
@@ -21,8 +19,7 @@ import com.ms.luvook.board.repository.BoardRepository;
 import com.ms.luvook.board.service.BoardService;
 import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
-import com.ms.luvook.member.domain.MemberType;
-import com.ms.luvook.member.repository.MemberRepository;
+import com.ms.luvook.member.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +33,7 @@ public class BoardTests {
 	private BoardService boardService;
 
 	@Autowired
-	private MemberRepository memberRepository;
+	private MemberService memberService;
 
 	@Autowired
 	private BoardRepository boardRepository;
@@ -47,14 +44,14 @@ public class BoardTests {
 
 	@Before
 	public void setup(){
-		bookBoard = new BookBoard(1,"즐거운책", 5, "책 제목", 12345, "img_url", "11111", "2222222"); 
-		memberMaster = new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", "img", MemberType.USER, new Date(), new Date());
-		memberMaster = memberRepository.save(memberMaster);
+		memberMaster = new MemberMaster("%test_nickname",  "%test1@naver.com", "123123", null, null, null, null);
+		memberMaster = memberService.signup(memberMaster);
 		memberId = memberMaster.getMemberId();
+		bookBoard = new BookBoard(memberId,"즐거운책", 5, "책 제목", 12345, "img_url", "K12345678", "1234567891263"); 
 	}
 	
 	@Test
-	public void saveAndFindTest(){
+	public void save(){
 		//When
 		Board savedBoard = boardService.save(bookBoard, memberId);
 		
@@ -63,7 +60,20 @@ public class BoardTests {
 	}
 	
 	@Test
-	public void deleteTest(){
+	public void find(){
+		//Given
+		Board savedBoard = boardService.save(bookBoard, memberId);
+		
+		//When
+		boardService.find(savedBoard.getBoardId(), memberId);
+		
+		//Then
+		String savedTitle = ((BookBoard)savedBoard).getTitle();
+		assertThat(savedTitle, is(bookBoard.getTitle()));
+	}
+	
+	@Test
+	public void delete(){
 		//Given
 		Board savedBoard = boardService.save(bookBoard, memberId);
 		int savedBoardId = savedBoard.getBoardId();
@@ -77,14 +87,11 @@ public class BoardTests {
 
 	
 	@Test
-	public void updateTest(){
+	public void update(){
 		//Given
-		bookBoard.setMemberId(0);
-		bookBoard.setRegDate(null);
-		
+		boardService.save(bookBoard, memberId);
 		BookBoard willUpdateBoard = bookBoard;
 		willUpdateBoard.setTitle("변경된 책제목");
-		boardService.save(bookBoard, memberId);
 		
 		//When
 		int updatedBoardId = boardService.update(willUpdateBoard);
@@ -97,14 +104,16 @@ public class BoardTests {
 
 	@Test
 	public void findAllHeartCountReceivedMember(){
-		//given
-		int memberId = 4;
-		
-		//when
+		//Given
+		Board savedBoard = boardService.save(bookBoard, memberId);
 		int heartCount = boardRepository.findAllReceivedHeartCount(memberId);
+		assertThat(heartCount, is(0));
 		
-		//then
-		log.info("heartCount ::: {}", heartCount);
-		
+		//When
+		boardService.toggleHeart(savedBoard.getBoardId(), heartCount);
+		 
+		//Then
+		heartCount = boardRepository.findAllReceivedHeartCount(memberId);
+		assertThat(heartCount, is(1));
 	}
 }
