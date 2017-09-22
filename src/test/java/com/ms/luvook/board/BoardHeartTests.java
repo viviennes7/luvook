@@ -1,5 +1,20 @@
 package com.ms.luvook.board;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import java.util.Date;
+
+import javax.transaction.Transactional;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
 import com.ms.luvook.board.domain.Board;
 import com.ms.luvook.board.domain.BoardHeart;
 import com.ms.luvook.board.domain.BookBoard;
@@ -9,21 +24,8 @@ import com.ms.luvook.common.domain.IsUse;
 import com.ms.luvook.member.domain.MemberMaster;
 import com.ms.luvook.member.domain.MemberType;
 import com.ms.luvook.member.service.MemberService;
+
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.transaction.Transactional;
-
-import java.util.Date;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 @Slf4j
 @Transactional
@@ -58,39 +60,39 @@ public class BoardHeartTests {
 
     @Test
     public void insertHeart(){
-        //when
+        //When
         boardService.toggleHeart(savedBoardId, savedMemberId);
         BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardId);
 
-        //then
+        //Then
         assertNotNull(boardHeart);
 
     }
 
     @Test
     public void updateHeartToIsUseN(){
-        //given
+        //Given
         boardService.toggleHeart(savedBoardId, savedMemberId);
 
-        //when
+        //When
         boardService.toggleHeart(savedBoardId, savedMemberId);
         BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardId);
 
-        //then
+        //Then
         assertThat(boardHeart.getIsUse(), is(IsUse.N));
     }
 
     @Test
     public void updateHeartToIsUseY(){
-        //given
+        //Given
         boardService.toggleHeart(savedBoardId, savedMemberId);
         boardService.toggleHeart(savedBoardId, savedMemberId);
 
-        //when
+        //When
         boardService.toggleHeart(savedBoardId, savedMemberId);
         BoardHeart boardHeart = boardHeartRepository.findByMemberIdAndBoardId(savedMemberId, savedBoardId);
 
-        //then
+        //Then
         assertThat(boardHeart.getIsUse(), is(IsUse.Y));
     }
 }
