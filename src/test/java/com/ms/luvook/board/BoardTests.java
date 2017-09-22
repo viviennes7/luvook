@@ -4,6 +4,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.junit.Before;
@@ -60,6 +62,18 @@ public class BoardTests {
 	}
 	
 	@Test
+	public void setupForSave(){
+		//When
+		Board savedBoard = boardService.save(bookBoard, memberId);
+		
+		//Then
+		assertThat(savedBoard.getMemberId(), is(memberId));
+		assertThat(savedBoard.getIsUse(), is(IsUse.Y));
+		assertNotNull(savedBoard.getContents());
+	}
+	
+	
+	@Test
 	public void find(){
 		//Given
 		Board savedBoard = boardService.save(bookBoard, memberId);
@@ -70,6 +84,25 @@ public class BoardTests {
 		//Then
 		String savedTitle = ((BookBoard)savedBoard).getTitle();
 		assertThat(savedTitle, is(bookBoard.getTitle()));
+	}
+	
+	@Test
+	public void findAllByMember(){
+		//Given
+		List<Board> boards = boardService.findAllByMember(memberId);
+		
+		//When
+		boardService.save(bookBoard, memberId);
+		boards = boardService.findAllByMember(memberId);
+		
+		//Then
+		assertThat(boards.size(), is(1));
+		
+	}
+	
+	@Test
+	public void setHeartCount(){
+		
 	}
 	
 	@Test
@@ -107,7 +140,6 @@ public class BoardTests {
 		//Given
 		Board savedBoard = boardService.save(bookBoard, memberId);
 		int heartCount = boardRepository.findAllReceivedHeartCount(memberId);
-		assertThat(heartCount, is(0));
 		
 		//When
 		boardService.toggleHeart(savedBoard.getBoardId(), heartCount);
