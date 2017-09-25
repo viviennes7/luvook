@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.ms.luvook.common.error.UnauthorizedException;
-import com.ms.luvook.common.service.JwtService;
+import com.ms.luvook.common.service.jwt.JwtService;
 
 @Component
 public class JwtInterceptor implements HandlerInterceptor{
