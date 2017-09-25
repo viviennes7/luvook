@@ -33,7 +33,7 @@ public class JwtTests {
 	@Test
 	public void createMemberTest() throws Exception{
 		//When
-		String jwt = jwtService.createMember(memberMaster);
+		String jwt = jwtService.create("member", memberMaster, "user");
 		Jws<Claims> claims = Jwts.parser()
 				  .setSigningKey("luvookSecret".getBytes("UTF-8"))
 				  .parseClaimsJws(jwt);
@@ -47,17 +47,4 @@ public class JwtTests {
 		assertThat(memberMaster.getEmail(), is(tokenMember.get("email")));
 		
 	}
-	
-	@Test
-	public void getJwtTest(){
-		//Given
-		String jwt = jwtService.createMember(memberMaster);
-		
-		//When
-		Map<String, Object> memberMap = jwtService.get("member");
-		
-		//Then
-		assertThat(memberMap.get("email"), is("test1@naver.com"));
-	}
-	
 }
