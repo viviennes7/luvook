@@ -11,7 +11,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.ms.luvook.common.error.UnauthorizedException;
-import com.ms.luvook.member.domain.MemberMaster;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -25,12 +24,13 @@ public class JwtServiceImpl implements JwtService{
 
 	private static final String SALT =  "luvookSecret";
 	
-	public String createMember(MemberMaster member){
+	@Override
+	public <T> String create(String key, T data, String subject){
 		String jwt = Jwts.builder()
 						 .setHeaderParam("typ", "JWT")
 						 .setHeaderParam("regDate", System.currentTimeMillis())
-						 .setSubject("user")
-						 .claim("member", member)
+						 .setSubject(subject)
+						 .claim(key, data)
 						 .signWith(SignatureAlgorithm.HS256, this.generateKey())
 						 .compact();
 		return jwt;

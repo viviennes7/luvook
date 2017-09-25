@@ -49,7 +49,7 @@ public class MemberController {
     public Result signin(String email, String password, HttpServletResponse response){
     	Result result = Result.successInstance();
         MemberMaster loginMember = memberService.signin(email, password);
-        String token = jwtService.createMember(loginMember);
+        String token = jwtService.create("member", loginMember, "user");
         response.setHeader("Authorization", token);
         result.setData(loginMember);
         return result;
