@@ -92,10 +92,9 @@ public class BoardController {
     	return result;
     }
     
-    @GetMapping("/member/heart/count")
-    public Result findAllReceivedHeartCount(){
+    @GetMapping("/member/{memberId}/heart/count")
+    public Result findAllReceivedHeartCount(@PathVariable int memberId){
     	Result result = Result.successInstance();
-        int memberId = jwtService.getMemberId();
     	int heartCount = boardService.findAllReceivedHeartCount(memberId);
     	result.setTotalCount(heartCount);
     	return result;
