@@ -89,11 +89,11 @@ public class BoardTests {
 	@Test
 	public void findAllByMember(){
 		//Given
-		List<Board> boards = boardService.findAllByMember(memberId);
+		List<Board> boards = boardService.findAllByMember(memberId, memberId);
 		
 		//When
 		boardService.save(bookBoard, memberId);
-		boards = boardService.findAllByMember(memberId);
+		boards = boardService.findAllByMember(memberId, memberId);
 		
 		//Then
 		assertThat(boards.size(), is(1));

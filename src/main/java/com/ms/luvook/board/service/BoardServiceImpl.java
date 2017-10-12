@@ -99,10 +99,10 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public List<Board> findAllByMember(int memberId) {
+	public List<Board> findAllByMember(int memberId, int connectingMemberId) {
 		List<Board> boards = boardRepository.findAllByMemberIdAndIsUseOrderByBoardIdDesc(memberId, IsUse.Y);
 		for(Board board : boards){
-			this.setAdditionalInfo(board, memberId);
+			this.setAdditionalInfo(board, connectingMemberId);
 		}
 		
 		return boards;
