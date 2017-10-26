@@ -1,5 +1,13 @@
 package com.ms.luvook.common.storage;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -10,14 +18,8 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
 import com.ms.luvook.common.util.Base64Utils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-@Component
+@Service
 public class AwsServiceImpl implements StorageService{
     private final static String BUCKET_NAME = "kms-bucket-01";
 
